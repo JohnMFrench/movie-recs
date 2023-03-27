@@ -1,0 +1,5 @@
+recs-app/package-lock.json
+data/*
+api/*
+recs-app/public/*.ico
+recs-app/public/*.json
