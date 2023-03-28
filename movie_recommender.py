@@ -7,12 +7,15 @@ from adjustText import adjust_text
 
 class MovieRecommender:
     def __init__(self, movies_filename, ratings_filename):
-        self.movies_df = pd.read_csv(movies_filename, engine='python', encoding='utf-8',
-                                     sep='::', header=None, names=['movie_id', 'name', 'genres'],
-                                     index_col='movie_id', dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
-        self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
-                                      sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
-                                      index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+        try:
+            self.movies_df = pd.read_csv(movies_filename, engine='python', encoding='utf-8',
+                                         sep='::', header=None, names=['movie_id', 'name', 'genres'],
+                                         index_col='movie_id', dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
+            self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
+                                          sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
+                                          index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+        except Exception as e:
+            print(f'Error occured while instantiating datafarmes: {e}')
 
         # join the two dataframes and group to determine metadata
         self.grouped_df = self.movies_df.join(self.ratings_df, on='movie_id').groupby(
@@ -24,22 +27,29 @@ class MovieRecommender:
         rating_count_std = self.grouped_df.std()[('rating', 'count')]
 
         two_zscore = rating_count_mean + (2*rating_count_std)
-        print('Average count of ratings per movie: ',
-              rating_count_mean.values[0])
-        print('Average stdev of ratings per movie: ', rating_count_std)
-        print('2Z value is at ', two_zscore.values[0])
+        # print('Average count of ratings per movie: ',
+        #   rating_count_mean.values[0])
+        # print('Average stdev of ratings per movie: ', rating_count_std)
+        # print('2Z value is at ', two_zscore.values[0])
         self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
             two_zscore)]
 
     # returns an array of the movie_id for all movies user has rated
-
     def get_user_movies(self, user_id: int):
         return set([int(x) for x in self.ratings_df[self.ratings_df['user_id'] == user_id].index])
+    
+    def get_movie_users(self, movie_id: int):
+        return set([int(x) for x in self.ratings_df[self.ratings_df.index == movie_id]['user_id'].values])
 
     def get_common_movies(self, user_id1: int, user_id2: int):
         user1_movies = set(self.get_user_movies(user_id1))
         user2_movies = set(self.get_user_movies(user_id2))
         return user1_movies.intersection(user2_movies)
+
+    def get_common_users(self, movie1_id:int, movie2_id:int):
+        movie1_users = self.get_movie_users(movie1_id)
+        movie2_users = self.get_movie_users(movie2_id)
+        return movie1_users.intersection(movie2_users)
 
     def get_movie_num_ratings(self, movie_id: int):
         return self.grouped_df[self.grouped_df.index == movie_id]['Count']
@@ -56,7 +66,7 @@ class MovieRecommender:
     def get_user_movie_rating(self, user_id: int, movie_id: int):
         return int(self.ratings_df[(self.ratings_df['user_id'] == user_id) & (self.ratings_df.index == movie_id)]['rating'])
 
-    def get_similarity_score(self, user1_id: int, user2_id: int):
+    def get_user_similarity_score(self, user1_id: int, user2_id: int):
         common_movies = self.get_common_movies(user1_id, user2_id)
         # check if the users have no movies in common
         if len(common_movies) < 1:
@@ -85,7 +95,7 @@ class MovieRecommender:
         most_similar_user = None
         most_similar_score = float(0)
         for id in self.ratings_df['user_id'].unique():
-            similarity = self.get_similarity_score(user_id, id)
+            similarity = self.get_user_similarity_score(user_id, id)
             if similarity != None and user_id != id:
                 if similarity > most_similar_score:
                     if similarity == float(1) and len(self.get_common_movies(user_id, id)) < 4:
@@ -98,7 +108,7 @@ class MovieRecommender:
             if comparisons >= 100:
                 return most_similar_user
 
-    def output_to_json(self, output_file='recs-app/public/top_rated_movies30.json'):
+    def output_to_json(self, output_file='recs-app/public/top_rated_movies30.json') -> None:
         self.top_rated_movies.sort_values(
             by='Count', ascending=False, inplace=True)
         top_rated_movies_names = self.top_rated_movies.index.values
@@ -115,7 +125,7 @@ class MovieRecommender:
         for rec in recs:
             print(self.get_movie_title(rec[0]))
 
-    def append_new_user_with_rating_pairs(self, r_pairs):
+    def append_new_user_with_rating_pairs(self, r_pairs) -> None:
         new_user_id = self.get_next_avail_user_id(self.ratings_df)
         ratings = [p[1] for p in r_pairs]
         movie_ids = [p[0] for p in r_pairs]
@@ -145,7 +155,7 @@ class MovieRecommender:
             f'{movie_name} has been rated {int(movie_num_ratings)} times, placing it in the {percentile[0]}th percentile')
         return percentile
 
-    def plot_users_ratings(self, user1_id: int, user2_id: int):
+    def plot_users_ratings(self, user1_id: int, user2_id: int) -> None:
         common_movies = self.get_common_movies(user1_id, user2_id)
         user_1_ratings = [self.get_user_movie_rating(
             user1_id, m) for m in common_movies]
@@ -171,3 +181,9 @@ class MovieRecommender:
         ax.set_xlim(0.25, 5.25)
         ax.set_ylim(0.25, 5.25)
         ax.plot()
+
+    def get_movie_similarity(self, movie1_id: int, movie2_id: int) -> float:
+        movie1_ratings = self.ratings_df.loc[self.ratings_df.index ==
+                                             movie1_id]['rating']
+        print(movie1_ratings.values)
+        return float(0)
