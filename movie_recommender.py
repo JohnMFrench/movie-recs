@@ -27,6 +27,9 @@ class MovieRecommender:
         rating_count_std = self.grouped_df.std()[('rating', 'count')]
 
         two_zscore = rating_count_mean + (2*rating_count_std)
+        # ax = self.grouped_df.plot.scatter(
+        #     x=('rating', 'mean'), y=('rating', 'count'), alpha=0.25)
+        # ax.axhline(y=int(two_zscore))
         # print('Average count of ratings per movie: ',
         #   rating_count_mean.values[0])
         # print('Average stdev of ratings per movie: ', rating_count_std)
@@ -54,11 +57,16 @@ class MovieRecommender:
     def get_movie_num_ratings(self, movie_id: int):
         return self.grouped_df[self.grouped_df.index == movie_id]['Count']
 
+    def get_movie_title_with_year(self, movie_id: int)->str:
+        return str(self.movies_df[self.movies_df.index == movie_id]['name'].values[0])
+
     def get_movie_title(self, movie_id: int):
-        raw_string = str(
-            self.movies_df[self.movies_df.index == movie_id]['name'].values[0])
+        raw_string = self.get_movie_title_with_year(movie_id=movie_id)
         pattern = compile(r'\s*\(\d{4}\)\s*')
         return pattern.sub('', raw_string)
+
+    def get_movie_genres(self, movie_id: int):
+       return str(self.movies_df[self.movies_df.index == movie_id]['genres'].values[0])
 
     def get_next_avail_user_id(self):
         return self.ratings_df['user_id'].max()
@@ -112,12 +120,13 @@ class MovieRecommender:
         self.top_rated_movies.sort_values(
             by='Count', ascending=False, inplace=True)
         top_rated_movies_names = self.top_rated_movies.index.values
-        top_rated_movies_slice = self.top_rated_movies.head(10)
-        top_rated_movies_slice.columns = top_rated_movies_slice.columns.get_level_values(
-            0)
-        print(self.top_rated_movies)
+        self.top_rated_movies_slice = self.top_rated_movies.head(10)
+        self.top_rated_movies_slice.columns = self.top_rated_movies_slice.columns.get_level_values(0)
+        
 
-        top_rated_movies_slice.to_json(output_file, orient='index')
+        print(self.top_rated_movies.index)
+
+        self.top_rated_movies_slice.to_json(output_file, orient='index')
 
     def get_naive_recommendation(self, user_id: int):
         user2_id = self.get_most_similar_user(user_id)
