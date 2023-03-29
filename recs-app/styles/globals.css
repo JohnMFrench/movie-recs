@@ -122,6 +122,11 @@ a {
     color: white;
     width: 12rem;
     margin: 0.25rem;
+    transition: max-height 0.3s ease-out;
+}
+
+.movie-container:hover {
+  border: 3px solid gold;
 }
 
 .movie-image {
@@ -180,6 +185,15 @@ a {
 
 .thumbs-down {
   margin-left: 0.5rem;
+}
+
+.closed {
+  animation: close-movie 0.2s ease-in-out forwards;
+}
+
+@keyframes close-movie {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(-10px); }
 }
 
 /* NAV STYLES */
