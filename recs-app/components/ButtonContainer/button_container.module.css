@@ -1,0 +1,28 @@
+.button_container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  bottom: 0.25rem;
+  margin-top: 2rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.button {
+  background-color: transparent;
+  font-size: 3rem;
+}
+
+.button:hover {
+  background-color: lightcoral;
+  border-radius: 1.5rem;
+  cursor: pointer;
+}
+
+.thumbs_up {
+  margin-right: 0.5rem;
+}
+
+.thumbs_down {
+  margin-left: 0.5rem;
+}

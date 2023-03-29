@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/NavBar/navbar';
+import HelpBar from '@/components/HelpBar/helpbar.component';
+import Navbar from '@/components/NavBar/navbar.component';
+import ButtonContainer from '@/components/ButtonContainer/button_container.component';
 
 interface Movie {
     movie_id: string;
@@ -21,14 +23,14 @@ interface Props {
 }
 
 const Grid = () => {
-    const num_elements: number = 10;
-    let start = 0;
+    const defaultMoviesShown: number = 20
     const [movies, setMovies] = useState<Movie[]>([]);
     const startingPrefs: UserPrefs = {
         liked_movies: [],
         disliked_movies: [],
     }
     const [userPrefs, setUserPrefs] = useState(startingPrefs);
+    const [moviesShown, setMoviesShown] = useState(defaultMoviesShown);
 
     const toggleMovieClosing = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, closing: true } : movie));
     // const toggleMovieVisibility = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, visible: false } : movie));
@@ -86,6 +88,20 @@ const Grid = () => {
         setUserPrefs(updatedUserPrefs);
         console.log(userPrefs.liked_movies);
     }
+
+    function onWindowScroll(e: any) {
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        if (scrollTop + clientHeight >= (scrollHeight * 2) / 3) {
+            console.log(moviesShown);
+            console.log('scrolled low');
+            setMoviesShown(prevMoviesShown => prevMoviesShown + 10);
+        } else {
+            console.log(moviesShown);
+            console.log('not scrolled low');
+        }
+    }
     /**
      * Fetch top rated movies data from a JSON file and update the state of `movies`
      * to contain an array of movies with their movie_id, name, rating, count, and visible properties.
@@ -93,7 +109,7 @@ const Grid = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             // Fetch data from a JSON file containing top rated movies.
-            const response = await fetch('/top_rated_50.json');
+            const response = await fetch('/top_rated_250.json');
             const data = await response.json();
 
             // Create an array of movies from the fetched data.
@@ -110,23 +126,23 @@ const Grid = () => {
             // Update the state of `movies` with the array of movies.
             setMovies(updatedMovieArray);
         };
+        window.addEventListener('scroll', (e) => onWindowScroll(e));
 
         // Call the `fetchMovies` function when the component mounts.
         fetchMovies();
     }, []);
 
 
-    let rng = Array.from({ length: num_elements - start }, (_, i) => start + i);
     return (
         <>
-            <Navbar />
-            {/* <h2>{movies.length} movies</h2> */}
+            <Navbar title={'MovieLens Recommendations'}/>
+            <HelpBar />
             <div className="app-container">
                 {
-                    movies.map((movie: Movie, i: number) => (
+                    movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
                         <>
                             {movie.visible &&
-                                <div key={i} className={`movie-container ${movie.closing ? "closed" : ""}`} onAnimationEnd={() => toggleMovieVisibility(movie.movie_id)} >
+                                <div key={movie.movie_id} className={`movie-container ${movie.closing ? "closed" : ""}`} onAnimationEnd={() => toggleMovieVisibility(movie.movie_id)} >
                                     <div className="image-container">
                                         <img
                                             src={'/' + movie.movie_id + '.jpg'}
@@ -136,11 +152,12 @@ const Grid = () => {
                                         />
                                         <div className="overlay">
                                             {movie.name}
-                                            <div className="button-container">
-                                                <div onClick={(e) => onThumbsDownClick(e, movie.movie_id)} className="button thumbs-down">&#128078;</div>
-                                                <div onClick={(e) => onNotSeenClick(e, movie.movie_id)} className="button not-seen">👀</div>
-                                                <div onClick={(e) => onThumbsUpClick(e, movie.movie_id)} className="button thumbs-up">&#128077;</div>
-                                            </div>
+                                            <ButtonContainer 
+                                                movie={movie}
+                                                onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => onNotSeenClick(e, movie.movie_id)}
+                                                onThumbsDownClick={(e: React.MouseEvent<HTMLDivElement>) => onThumbsDownClick(e, movie.movie_id)}
+                                                onThumbsUpClick={(e: React.MouseEvent<HTMLDivElement>) => onThumbsUpClick(e, movie.movie_id)}
+                                             />
                                         </div>
                                     </div>
                                 </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Navbar() {
+function HelpBar() {
     return (
         <div className="navbar">
             <div className="dropdown">
@@ -13,4 +13,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default HelpBar;
