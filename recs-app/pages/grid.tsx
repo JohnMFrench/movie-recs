@@ -3,6 +3,7 @@ import HelpBar from '@/components/HelpBar/helpbar.component';
 import Navbar from '@/components/NavBar/navbar.component';
 import ButtonContainer from '@/components/ButtonContainer/button_container.component';
 import Toast from '@/components/Toast/toast.component';
+import Modal from '@/components/Modal/modal.component';
 
 interface Movie {
     movie_id: string;
@@ -33,6 +34,9 @@ const Grid = () => {
     const [userPrefs, setUserPrefs] = useState(startingPrefs);
     const [moviesShown, setMoviesShown] = useState(defaultMoviesShown);
     const [toastMessage, setToastMessage] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    type movieOrNull = Movie | null;
+    const [modalFocusedMovie, setModalFocusedMovie] = useState<movieOrNull>(null);
 
     const toggleMovieClosing = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, closing: true } : movie));
     // const toggleMovieVisibility = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, visible: false } : movie));
@@ -71,6 +75,8 @@ const Grid = () => {
     }
 
     function addDislikedMovie(movie: Movie) {
+        //push this disliked movie to the array of liked_movies
+        // in userPrefs if it not already in
         let l_m: Movie[] = userPrefs.disliked_movies;
         if (l_m.indexOf(movie) == -1) {
             l_m.push(movie);
@@ -85,6 +91,8 @@ const Grid = () => {
     }
 
     function addLikedMovie(movie: Movie) {
+        //push this liked movie to the array of liked_movies
+        // in userPrefs if it not already in
         let l_m: Movie[] = userPrefs.liked_movies;
         if (l_m.indexOf(movie) == -1) {
             l_m.push(movie);
@@ -95,6 +103,8 @@ const Grid = () => {
         };
         setUserPrefs(updatedUserPrefs);
         updateToastMessage();
+        setModalFocusedMovie(movie);
+        setModalVisible(true);
         console.log(userPrefs.liked_movies);
     }
 
@@ -175,6 +185,9 @@ const Grid = () => {
                         </>
                     ))
                 }
+                <Modal visible={modalVisible} movie={modalFocusedMovie} onClose={function (): void {
+                    setModalVisible(false);
+                }} />
             </div>
         </>
     )

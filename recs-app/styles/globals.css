@@ -97,7 +97,7 @@ a {
   width: 100%;
   height: 100%;
   /* background-color: rgb(27, 27, 27); */
-  background-color: black;
+  background-color: #4D4043;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -186,8 +186,8 @@ a {
 .dropbtn {
   background-color: darkgray;
   border-bottom-left-radius: 1rem;
-  border-left: 3px solid red;
-  border-bottom: 3px solid red;
+  border-left: 3px solid #6B2032;
+  border-bottom: 3px solid #6B2032;
   border-right: none;
   border-top: none;
   color: white;
