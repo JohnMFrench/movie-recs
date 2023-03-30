@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
 import HelpBar from '@/components/HelpBar/helpbar.component';
 import Navbar from '@/components/NavBar/navbar.component';
 import ButtonContainer from '@/components/ButtonContainer/button_container.component';
@@ -44,6 +44,10 @@ const Grid = () => {
         setMovies(movies.filter((movie) => movie.movie_id !== movie_id));
     };
 
+    const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+        const imgElement = event.currentTarget;
+        imgElement.style.display = 'none';
+    }
 
     function onThumbsDownClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void {
         // console.log('clicked down movie ' + movie_id);
@@ -166,6 +170,7 @@ const Grid = () => {
                                         <img
                                             src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + '.jpg'}
                                             alt=""
+                                            onError={handleImageError}
                                             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                                             className="movie-image"
                                         />
