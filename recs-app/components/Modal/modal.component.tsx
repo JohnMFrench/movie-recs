@@ -25,7 +25,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, onClose }) => {
                 {movie &&
                     <>
                         <h2>{movie.name}</h2>
-                        <img src={movie.movie_id + ".jpg"} alt="" />
+                        <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                     </>
                 }
             </div>
