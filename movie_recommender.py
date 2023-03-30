@@ -135,7 +135,7 @@ class MovieRecommender:
             print(self.get_movie_title(rec[0]))
 
     def append_new_user_with_rating_pairs(self, r_pairs) -> None:
-        new_user_id = self.get_next_avail_user_id(self.ratings_df)
+        new_user_id = self.get_next_avail_user_id()
         ratings = [p[1] for p in r_pairs]
         movie_ids = [p[0] for p in r_pairs]
         user_ids = [new_user_id for _ in range(0, len(r_pairs))]
@@ -152,6 +152,13 @@ class MovieRecommender:
         print(appended_ratings_df)
         # print(new_ratings_df)
         # print(ratings_df)
+
+    def handle_recommendation_request(self, liked_movies, disliked_movies):
+        rating_pairs = [(int(movie), 5) for movie in liked_movies]
+        rating_pairs.extend([(int(movie), 1) for movie in disliked_movies])
+        user_id = self.get_next_avail_user_id()
+        self.append_new_user_with_rating_pairs(rating_pairs)
+        return self.get_naive_recommendation(user_id)
 
     def get_movie_rating_count_percentile(self, movie_id: int):
         movie_name = self.get_movie_title(movie_id)
