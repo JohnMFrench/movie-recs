@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HelpBar from '@/components/HelpBar/helpbar.component';
 import Navbar from '@/components/NavBar/navbar.component';
 import ButtonContainer from '@/components/ButtonContainer/button_container.component';
+import Toast from '@/components/Toast/toast.component';
 
 interface Movie {
     movie_id: string;
@@ -31,6 +32,7 @@ const Grid = () => {
     }
     const [userPrefs, setUserPrefs] = useState(startingPrefs);
     const [moviesShown, setMoviesShown] = useState(defaultMoviesShown);
+    const [toastMessage, setToastMessage] = useState('');
 
     const toggleMovieClosing = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, closing: true } : movie));
     // const toggleMovieVisibility = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, visible: false } : movie));
@@ -46,6 +48,11 @@ const Grid = () => {
         if (movieToUpdate) {
             addDislikedMovie(movieToUpdate);
         }
+    }
+
+    function updateToastMessage() {
+        const numMoviesLiked: number = userPrefs.liked_movies.length + userPrefs.disliked_movies.length;
+        setToastMessage(numMoviesLiked + ' movies rated');
     }
 
     function onThumbsUpClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void {
@@ -73,6 +80,7 @@ const Grid = () => {
             disliked_movies: l_m,
         };
         setUserPrefs(updatedUserPrefs);
+        updateToastMessage();
         console.log(userPrefs.disliked_movies);
     }
 
@@ -86,6 +94,7 @@ const Grid = () => {
             liked_movies: l_m,
         };
         setUserPrefs(updatedUserPrefs);
+        updateToastMessage();
         console.log(userPrefs.liked_movies);
     }
 
@@ -135,7 +144,7 @@ const Grid = () => {
 
     return (
         <>
-            <Navbar title={'MovieLens Recommendations'}/>
+            <Navbar title={'MovieLens Recommendations'} />
             <HelpBar />
             <div className="app-container">
                 {
@@ -152,16 +161,17 @@ const Grid = () => {
                                         />
                                         <div className="overlay">
                                             {movie.name}
-                                            <ButtonContainer 
+                                            <ButtonContainer
                                                 movie={movie}
                                                 onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => onNotSeenClick(e, movie.movie_id)}
                                                 onThumbsDownClick={(e: React.MouseEvent<HTMLDivElement>) => onThumbsDownClick(e, movie.movie_id)}
                                                 onThumbsUpClick={(e: React.MouseEvent<HTMLDivElement>) => onThumbsUpClick(e, movie.movie_id)}
-                                             />
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             }
+                            <Toast message={toastMessage} />
                         </>
                     ))
                 }
