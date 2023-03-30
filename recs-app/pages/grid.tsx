@@ -128,7 +128,7 @@ const Grid = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             // Fetch data from a JSON file containing top rated movies.
-            const response = await fetch('/top_rated_250.json');
+            const response = await fetch('/top_rated_movies500.json');
             const data = await response.json();
 
             // Create an array of movies from the fetched data.
@@ -164,7 +164,7 @@ const Grid = () => {
                                 <div key={movie.movie_id} className={`movie-container ${movie.closing ? "closed" : ""}`} onAnimationEnd={() => toggleMovieVisibility(movie.movie_id)} >
                                     <div className="image-container">
                                         <img
-                                            src={'/' + movie.movie_id + '.jpg'}
+                                            src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + '.jpg'}
                                             alt=""
                                             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                                             className="movie-image"
