@@ -1,14 +1,10 @@
 recs-app/package-lock.json
-recs-app/public/*
 data/*
 api/*
 recs-app/public/*.ico
-recs-app/public/*.json
-<<<<<<< HEAD
-api_env
-__pycache__
-
-=======
+recs-app/public/*50.json
+recs-app/public/*250.json
+recs-app/public/*archive.json
 recs-app/public/*.jpg
 __pycache__
 node_modules
@@ -18,4 +14,3 @@ node_modules
 api_env/Include
 api_env/Lib
 api_env/Scripts
->>>>>>> dc05ae6e9c645034d4afb133c4c21a4a2a50b183
