@@ -13,6 +13,12 @@
   font-size: 3rem;
 }
 
+@media only screen and (max-width: 767px) {
+  .button {
+    font-size: 1.5rem;
+  }
+}
+
 .button:hover {
   background-color: lightcoral;
   border-radius: 1.5rem;
