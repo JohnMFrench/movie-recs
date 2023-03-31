@@ -4,15 +4,8 @@ import Navbar from '@/components/NavBar/navbar.component';
 import ButtonContainer from '@/components/ButtonContainer/button_container.component';
 import Toast from '@/components/Toast/toast.component';
 import Modal from '@/components/Modal/modal.component';
-
-interface Movie {
-    movie_id: string;
-    name: string;
-    rating: number;
-    count: number;
-    visible: boolean;
-    closing: boolean;
-}
+import Movie from '@/components/MovieContainer/movie.type';
+import MovieContainer from '@/components/MovieContainer/movie_container.component';
 
 type UserPrefs = {
     liked_movies: Movie[];
@@ -165,26 +158,11 @@ const Grid = () => {
                     movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
                         <>
                             {movie.visible &&
-                                <div key={movie.movie_id} className={`movie-container ${movie.closing ? "closed" : ""}`} onAnimationEnd={() => toggleMovieVisibility(movie.movie_id)} >
-                                    <div className="image-container">
-                                        <img
-                                            src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + '.jpg'}
-                                            alt=""
-                                            onError={handleImageError}
-                                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                                            className="movie-image"
-                                        />
-                                        <div className="overlay">
-                                            {movie.name}
-                                            <ButtonContainer
-                                                movie={movie}
-                                                onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => onNotSeenClick(e, movie.movie_id)}
-                                                onThumbsDownClick={(e: React.MouseEvent<HTMLDivElement>) => onThumbsDownClick(e, movie.movie_id)}
-                                                onThumbsUpClick={(e: React.MouseEvent<HTMLDivElement>) => onThumbsUpClick(e, movie.movie_id)}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                                <MovieContainer movie={movie}
+                                    onThumbsDownClick={onThumbsDownClick}
+                                    onThumbsUpClick={onThumbsUpClick}
+                                    onNotSeenClick={onNotSeenClick}
+                                    toggleMovieVisibility={toggleMovieVisibility} />
                             }
                             <Toast message={toastMessage} />
                         </>
