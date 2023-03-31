@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './movie_container.module.css';
 import Movie from './movie.type';
 import ButtonContainer from '../ButtonContainer/button_container.component';
+import GenreDataService from '@/api/movies.api';
 
 interface MovieContainerProps {
     movie: Movie;
-    // onThumbsUpClick
     onThumbsDownClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void;
     onThumbsUpClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void;
     onNotSeenClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void;
@@ -13,10 +13,24 @@ interface MovieContainerProps {
 }
 
 function MovieContainer(props: MovieContainerProps) {
+    const [genres, setGenres] = useState<string[]>([]);
+
     const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
         const imgElement = event.currentTarget;
         imgElement.style.display = 'none';
     }
+
+
+    useEffect(() => {
+        const genreDataService = new GenreDataService();
+        genreDataService.getGenres(Number.parseInt(props.movie.movie_id))
+            .then((response) => {
+                setGenres(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <div
@@ -32,6 +46,7 @@ function MovieContainer(props: MovieContainerProps) {
                 />
                 <div className={styles.overlay}>
                     {props.movie.name}
+                    <em>{genres}</em>
                     <ButtonContainer
                         movie={props.movie}
                         onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => props.onNotSeenClick(e, props.movie.movie_id)}

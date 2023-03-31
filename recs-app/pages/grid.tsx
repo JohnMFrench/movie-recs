@@ -110,12 +110,7 @@ const Grid = () => {
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight;
         if (scrollTop + clientHeight >= (scrollHeight * 2) / 3) {
-            console.log(moviesShown);
-            console.log('scrolled low');
             setMoviesShown(prevMoviesShown => prevMoviesShown + 10);
-        } else {
-            console.log(moviesShown);
-            console.log('not scrolled low');
         }
     }
     /**
