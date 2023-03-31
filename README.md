@@ -8,3 +8,4 @@ This is an app that will generate movie recommendations.
 - create a flask api to serve responses to requests from front-end
 - fix issue where Toast keeps popping up when user scrolls page
 - figure out how to generate matplotlib graphs in response to api requests, store in mem only
+- add columns to the joined_df for each genres

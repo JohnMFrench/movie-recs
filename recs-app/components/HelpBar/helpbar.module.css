@@ -1,0 +1,54 @@
+/* NAV STYLES */
+.helpbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  opacity: 0.75;
+}
+
+.dropdown:hover {
+  opacity: 1;
+}
+
+.dropbtn {
+  background-color: darkgray;
+  border-bottom-left-radius: 1rem;
+  border-left: 3px solid #6B2032;
+  border-bottom: 3px solid #6B2032;
+  border-right: none;
+  border-top: none;
+  color: white;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  z-index: 1;
+  right: 0;
+}
+
+.dropdown:hover .dropdownContent {
+  display: block;
+  min-width: 12rem;
+}
+
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdownContent a:hover {
+  background-color: #f1f1f1;
+}
