@@ -104,7 +104,7 @@ const Grid = () => {
         };
         setUserPrefs(updatedUserPrefs);
         updateToastMessage();
-        setModalVisible(true);
+        // setModalVisible(true);
         if (l_m.length >= 5) {
             setToastRecButtonVisible(true);
         }

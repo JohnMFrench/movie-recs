@@ -25,7 +25,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, onClose }) => {
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
                 {movie &&
                     <>
-                        <h2>{movie.name}</h2>
+                        <h2 className={styles.movieTitle}>{movie.name}</h2>
                         <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                         {/* <ButtonContainer movie={movie}
                             onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {

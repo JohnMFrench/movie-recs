@@ -1,9 +1,10 @@
 .button_container {
   display: flex;
   justify-content: space-between;
-  position: relative;
-  bottom: 0.25rem;
-  margin-top: 2rem;
+  position: absolute;
+  bottom: 0;
+  /* bottom: 0.25rem; */
+  /* margin-top: 2rem; */
   width: 100%;
   padding: 0.5rem;
 }
@@ -11,6 +12,8 @@
 .button {
   background-color: transparent;
   font-size: 3rem;
+  border-radius: 3rem;
+  padding-bottom: 0.5rem;
 }
 
 @media only screen and (max-width: 767px) {
@@ -21,7 +24,6 @@
 
 .button:hover {
   background-color: lightcoral;
-  border-radius: 1.5rem;
   cursor: pointer;
 }
 

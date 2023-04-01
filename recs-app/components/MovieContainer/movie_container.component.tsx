@@ -45,8 +45,14 @@ function MovieContainer(props: MovieContainerProps) {
                     className={styles.movieImage}
                 />
                 <div className={styles.overlay}>
-                    {props.movie.name}
-                    <em>{genres}</em>
+                    <h2 className={styles.movieContainerTitle}>
+                        {props.movie.name}
+                    </h2>
+                    <h2 className={styles.movieContainerGenres}>
+                        {/* <em> */}
+                            {genres}
+                        {/* </em> */}
+                    </h2>
                     <ButtonContainer
                         movie={props.movie}
                         onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => props.onNotSeenClick(e, props.movie.movie_id)}

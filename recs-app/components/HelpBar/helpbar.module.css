@@ -19,13 +19,18 @@
 .dropbtn {
   background-color: darkgray;
   border-bottom-left-radius: 1rem;
-  border-left: 3px solid #6B2032;
-  border-bottom: 3px solid #6B2032;
+  border-left: 3px solid #6b2032;
+  border-bottom: 3px solid #6b2032;
   border-right: none;
   border-top: none;
   color: white;
   font-size: 3rem;
   cursor: pointer;
+}
+@media only screen and (max-width: 767px) {
+  .dropbtn {
+    font-size: 2rem;
+  }
 }
 
 .dropdownContent {

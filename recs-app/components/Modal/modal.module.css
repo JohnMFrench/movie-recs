@@ -1,36 +1,56 @@
 .modalVisible {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
 }
 
 .modalHidden {
-    display: none;
+  display: none;
+  z-index: -1;
 }
 
 .modalContent {
-    position: relative;
-    max-width: 800px;
-    max-height: 80vh;
-    overflow: auto;
-    padding: 2rem;
-    text-align: center;
-    border-radius: 4px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
-    color: white;
-    background-color: black;
-    border: 0.25rem solid #6B2032;
-    border-radius: 1rem;
+  position: relative;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow: auto;
+  text-align: center;
+  border-radius: 4px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  background-color: black;
+  border: 0.25rem solid #6b2032;
+  border-radius: 1rem;
+}
+
+@media only screen and (max-width: 767px) {
+  .modalContent {
+    max-width: 95vw;
+    width: 95vw;
+    max-height: 95vh;
+    height: 95vh;
+  }
 }
 
 .modalContent img {
-    min-height: 6rem;
-    min-width: 2rem;
+  min-height: 6rem;
+  min-width: 2rem;
+}
+
+@media only screen and (max-width: 767px) {
+  .modalContent img {
+    padding-top: 2rem;
+  }
+}
+
+.movieTitle {
+    font-size: clamp(2px, 2vw, 3rem);
+    padding: 0.75rem;
 }
