@@ -40,7 +40,7 @@ class MovieRecommender:
     # returns an array of the movie_id for all movies user has rated
     def get_user_movies(self, user_id: int):
         return set([int(x) for x in self.ratings_df[self.ratings_df['user_id'] == user_id].index])
-    
+
     def get_movie_users(self, movie_id: int):
         return set([int(x) for x in self.ratings_df[self.ratings_df.index == movie_id]['user_id'].values])
 
@@ -49,7 +49,7 @@ class MovieRecommender:
         user2_movies = set(self.get_user_movies(user_id2))
         return user1_movies.intersection(user2_movies)
 
-    def get_common_users(self, movie1_id:int, movie2_id:int):
+    def get_common_users(self, movie1_id: int, movie2_id: int):
         movie1_users = self.get_movie_users(movie1_id)
         movie2_users = self.get_movie_users(movie2_id)
         return movie1_users.intersection(movie2_users)
@@ -57,7 +57,7 @@ class MovieRecommender:
     def get_movie_num_ratings(self, movie_id: int):
         return self.grouped_df[self.grouped_df.index == movie_id]['Count']
 
-    def get_movie_title_with_year(self, movie_id: int)->str:
+    def get_movie_title_with_year(self, movie_id: int) -> str:
         return str(self.movies_df[self.movies_df.index == movie_id]['name'].values[0])
 
     def get_movie_title(self, movie_id: int):
@@ -66,7 +66,7 @@ class MovieRecommender:
         return pattern.sub('', raw_string)
 
     def get_movie_genres(self, movie_id: int):
-       return str(self.movies_df[self.movies_df.index == movie_id]['genres'].values[0])
+        return str(self.movies_df[self.movies_df.index == movie_id]['genres'].values[0])
 
     def get_next_avail_user_id(self):
         return self.ratings_df['user_id'].max()
@@ -121,8 +121,8 @@ class MovieRecommender:
             by='Count', ascending=False, inplace=True)
         top_rated_movies_names = self.top_rated_movies.index.values
         self.top_rated_movies_slice = self.top_rated_movies.head(10)
-        self.top_rated_movies_slice.columns = self.top_rated_movies_slice.columns.get_level_values(0)
-        
+        self.top_rated_movies_slice.columns = self.top_rated_movies_slice.columns.get_level_values(
+            0)
 
         print(self.top_rated_movies.index)
 
