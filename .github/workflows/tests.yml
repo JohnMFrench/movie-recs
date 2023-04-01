@@ -15,6 +15,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pandas numpy scipy adjustText flask flask-cors
-          tests/setup_test_env.sh
+          py tests/setup_test_env.py
       - name: Run tests
         run: python -m unittest discover tests
