@@ -1,6 +1,6 @@
 import unittest
 import requests
-from app import create_app
+from api.app import create_app
 
 class TestApiApp(unittest.TestCase):
     def setUp(self) -> None:
