@@ -1,3 +1,5 @@
+import sys 
+print(sys.path)
 from api.app import create_app
 # from api.app import create_app
 import unittest
