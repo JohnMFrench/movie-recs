@@ -13,9 +13,6 @@ jobs:
           python-version: '3.x'
       - name: Set file permissions
         run: chmod +x tests/setup_test_env.py
-      - name: Add api folder to PYTHONPATH
-        run: |
-          echo "export PYTHONPATH=${PYTHONPATH}:${PWD}/../api" >> $GITHUB_ENV
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -24,4 +21,6 @@ jobs:
           mkdir data/ml-10M100K
           python tests/setup_test_env.py
       - name: Run tests
+        env:
+        PYTHONPATH: ${{ github.workspace }}/api
         run: python -m unittest discover tests
