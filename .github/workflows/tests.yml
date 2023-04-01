@@ -22,5 +22,5 @@ jobs:
           python tests/setup_test_env.py
       - name: Run tests
         env:
-        PYTHONPATH: ${{ github.workspace }}/api
+          PYTHONPATH: ${{ github.workspace }}/api
         run: python -m unittest discover tests
