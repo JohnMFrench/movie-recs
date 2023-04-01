@@ -1,6 +1,6 @@
 recs-app/package-lock.json
 data/*
-api/*
+api/__pycache__
 recs-app/public/*.ico
 recs-app/public/*50.json
 recs-app/public/*250.json
