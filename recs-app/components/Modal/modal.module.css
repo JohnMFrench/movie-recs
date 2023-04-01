@@ -32,7 +32,7 @@
 
 @media only screen and (max-width: 767px) {
   .modalContent {
-    max-width: 95vw;
+    max-width: 80vw;
     width: 95vw;
     max-height: 95vh;
     height: 95vh;
@@ -51,6 +51,6 @@
 }
 
 .movieTitle {
-    font-size: clamp(2px, 2vw, 3rem);
-    padding: 0.75rem;
+  font-size: clamp(16px, 18px, 3rem);
+  padding: 0.75rem;
 }
