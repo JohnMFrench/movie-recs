@@ -15,7 +15,7 @@ jobs:
         run: chmod +x tests/setup_test_env.py
       - name: Add api folder to PYTHONPATH
         run: |
-          echo "export PYTHONPATH=${PYTHONPATH}:${PWD}/api" >> $GITHUB_ENV
+          echo "export PYTHONPATH=${PYTHONPATH}:${PWD}/../api" >> $GITHUB_ENV
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
