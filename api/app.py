@@ -1,7 +1,7 @@
 import sys
 import os
 from flask_cors import CORS
-# sys.path.append("..")
+sys.path.append("..")
 
 from flask import Flask, request, jsonify
 from movie_recommender import MovieRecommender

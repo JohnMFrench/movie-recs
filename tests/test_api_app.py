@@ -2,7 +2,6 @@ import requests
 import unittest
 from api.app import create_app
 import sys
-print(sys.path)
 
 
 class TestApiApp(unittest.TestCase):
@@ -15,7 +14,9 @@ class TestApiApp(unittest.TestCase):
         return super().setUpClass()
 
     def test_movie_genre_endpoint(self):
+        print('testing in test_movie_genre_endpoints')
+        print(type(self.app), self.app)
         url = self.base_url + '/movies/1'
-        res = requests.get(url)
+        res = requests.get(url, verify=False)
         # print(res.content.decode())
         self.assertEqual(res.status_code, 200)
