@@ -27,5 +27,4 @@ jobs:
           echo "testing PYTHONPATH in tests.yml"
           cd api
           flask run &
-          echo $PYTHONPATH
           python -m unittest discover tests
