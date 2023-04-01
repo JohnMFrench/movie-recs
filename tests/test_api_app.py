@@ -1,5 +1,4 @@
-sys.path.append('/home/runner/work/movie-recs/movie-recs/api')
-from app import create_app
+from api.app import create_app
 # from api.app import create_app
 import unittest
 import requests

@@ -25,4 +25,4 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
         run: |
           echo $PYTHONPATH
-          python -m unittest discover tests
+          python -m unittest tests/test_api_app.py
