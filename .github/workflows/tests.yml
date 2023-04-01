@@ -24,7 +24,8 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          echo "testing PYTHONPATH in tests.ymlw
-          "
+          echo "testing PYTHONPATH in tests.ymlw"
+          ls api/
+          ls tests/
           echo $PYTHONPATH
           python -m unittest discover tests
