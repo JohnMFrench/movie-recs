@@ -6,7 +6,7 @@ import unittest
 import requests
 
 class TestApiApp(unittest.TestCase):
-    def setUp(self) -> None:
+    def setUpClass(self) -> None:
         super().setUp()
         # instantiate copy of app to run tests
         self.app = create_app()
