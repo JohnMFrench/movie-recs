@@ -24,7 +24,7 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          echo "testing PYTHONPATH in tests.yml"
           cd api
           flask run &
+          cd ../
           python -m unittest discover tests
