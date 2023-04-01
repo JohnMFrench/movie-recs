@@ -4,7 +4,7 @@ import zipfile
 import urllib.request
 import shutil
 
-DATA_DIR = '../data/ml-10M100K'
+DATA_DIR = 'data/ml-10M100K'
 REQUIRED_FILES = ['movies.dat', 'ratings.dat']
 ZIP_URL = 'https://files.grouplens.org/datasets/movielens/ml-10m.zip'
 ZIP_FOLDERNAME = 'ml-10M100K'
