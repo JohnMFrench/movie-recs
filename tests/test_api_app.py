@@ -1,10 +1,13 @@
-import sys 
-print(sys.path)
-from api.app import create_app
-import unittest
 import requests
+import unittest
+from api.app import create_app
+import sys
+print(sys.path)
+
 
 class TestApiApp(unittest.TestCase):
+
+    @classmethod
     def setUpClass(self) -> None:
         # instantiate copy of app to run tests
         self.app = create_app()
