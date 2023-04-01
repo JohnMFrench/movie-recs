@@ -1,5 +1,7 @@
 import unittest
 import requests
+import sys
+sys.path.append("..")
 from api.app import create_app
 
 
