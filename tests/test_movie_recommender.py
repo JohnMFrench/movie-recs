@@ -29,17 +29,14 @@ class TestMovieRecommender(unittest.TestCase):
     def test_get_movie_title(self):
         t = self.mr.get_movie_title(1)
         expected_name = 'Toy Story'
-        print(f'Testing if {t}={expected_name}')
         self.assertEqual(t, expected_name)
 
     def test_get_movie_title_with_year(self):
         t = self.mr.get_movie_title_with_year(1)
         expected_name = 'Toy Story (1995)'
-        print(f'Testing if {t}={expected_name}')
         self.assertEqual(t, expected_name)
 
     def test_get_movie_genres(self):
         g = self.mr.get_movie_genres(1)
-        print(type(g), g)
         expected_genres = 'Adventure|Animation|Children|Comedy|Fantasy'
         self.assertEqual(g, expected_genres)
