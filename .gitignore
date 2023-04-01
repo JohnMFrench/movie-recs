@@ -11,6 +11,7 @@ node_modules
 .eslintrc.json
 
 # api virtual env
-api_env/Include
-api_env/Lib
-api_env/Scripts
+api_env
+# api_env/Include
+# api_env/Lib
+# api_env/Scripts
