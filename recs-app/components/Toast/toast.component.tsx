@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import styles from './toast.module.css';
+import ToastProps from './toast.type';
 
-interface ToastProps {
-  message: string;
-}
-
-const Toast: React.FC<ToastProps> = ({ message }) => {
+const Toast: React.FC<ToastProps> = ({ message, recButtonVisible }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (message) {
       setIsVisible(true);
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 3000);
+      if (!recButtonVisible) {
+        setTimeout(() => {
+          setIsVisible(false);
+        }, 3000);
+      }
     }
   }, [message]);
 
   return (
     <div className={`${styles.toast} ${isVisible ? styles.visible : ''}`}>
-      <span>{message}</span>
+      {/* <span> */}
+      <div className={styles.message}>
+        🍿{message}
+      </div>
+      {recButtonVisible &&
+        <div className={styles.recButton}>👥User-Based Recommendation</div>
+      }
+      {/* </span> */}
     </div>
   );
 };

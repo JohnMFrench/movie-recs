@@ -6,6 +6,7 @@ import Toast from '@/components/Toast/toast.component';
 import Modal from '@/components/Modal/modal.component';
 import Movie from '@/components/MovieContainer/movie.type';
 import MovieContainer from '@/components/MovieContainer/movie_container.component';
+import ToastProps from '@/components/Toast/toast.type';
 
 type UserPrefs = {
     liked_movies: Movie[];
@@ -30,6 +31,7 @@ const Grid = () => {
     const [modalVisible, setModalVisible] = useState(false);
     type movieOrNull = Movie | null;
     const [modalFocusedMovie, setModalFocusedMovie] = useState<movieOrNull>(null);
+    const [toastRecButtonVisible, setToastRecButtonVisible] = useState(false);
 
     const toggleMovieClosing = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, closing: true } : movie));
     // const toggleMovieVisibility = (movie_id: string) => setMovies(movies.map((movie) => movie.movie_id === movie_id ? { ...movie, visible: false } : movie));
@@ -53,7 +55,7 @@ const Grid = () => {
 
     function updateToastMessage() {
         const numMoviesLiked: number = userPrefs.liked_movies.length + userPrefs.disliked_movies.length;
-        setToastMessage(numMoviesLiked + ' movies rated');
+        setToastMessage(numMoviesLiked.toString());
     }
 
     function onThumbsUpClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void {
@@ -66,9 +68,11 @@ const Grid = () => {
         console.log('movies = ' + movies.length);
     }
 
-    function onNotSeenClick(event: React.MouseEvent<HTMLDivElement>, movie_id: string): void {
+    function onNotSeenClick(event: React.MouseEvent<HTMLDivElement>, movie: Movie): void {
         // console.log('clicked not seen ' + movie_id)
-        toggleMovieClosing(movie_id);
+        // toggleMovieClosing(movie_id);
+        setModalVisible(true);
+        setModalFocusedMovie(movie);
     }
 
     function addDislikedMovie(movie: Movie) {
@@ -100,8 +104,10 @@ const Grid = () => {
         };
         setUserPrefs(updatedUserPrefs);
         updateToastMessage();
-        setModalFocusedMovie(movie);
         setModalVisible(true);
+        if (l_m.length >= 5) {
+            setToastRecButtonVisible(true);
+        }
         console.log(userPrefs.liked_movies);
     }
 
@@ -156,10 +162,10 @@ const Grid = () => {
                                 <MovieContainer movie={movie}
                                     onThumbsDownClick={onThumbsDownClick}
                                     onThumbsUpClick={onThumbsUpClick}
-                                    onNotSeenClick={onNotSeenClick}
+                                    onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => onNotSeenClick(e, movie)}
                                     toggleMovieVisibility={toggleMovieVisibility} />
                             }
-                            <Toast message={toastMessage} />
+                            <Toast message={toastMessage} recButtonVisible={toastRecButtonVisible} />
                         </>
                     ))
                 }
