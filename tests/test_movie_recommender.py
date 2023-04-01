@@ -10,9 +10,6 @@ class TestMovieRecommender(unittest.TestCase):
     movies_file = os.path.join(dir_path, '..', 'data', 'ml-10M100K', 'movies.dat')
     ratings_file = os.path.join(dir_path, '..', 'data', 'ml-10M100K', 'ratings.dat')
 
-    # movies_file = '../data/ml-10M100K/movies.dat'
-    # ratings_file = '../data/ml-10M100K/ratings.dat'
-
     @classmethod
     def setUpClass(self) -> None:
         self.mr = MovieRecommender(movies_filename=TestMovieRecommender.movies_file,
