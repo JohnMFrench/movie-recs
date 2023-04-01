@@ -13,3 +13,5 @@ This is an app that will generate movie recommendations.
 - figure out how to generate matplotlib graphs in response to api requests, store in mem only
 - add columns to the joined_df for each genres
 - ~~setup CI/CD with github workflows~~
+- add media queries to the components that lack them
+- setup CI/CD pipeline to prevent deploying to vercel if unit tests fail
