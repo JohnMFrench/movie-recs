@@ -1,13 +1,9 @@
-from api.app import create_app
+import sys
+sys.path.append('/home/runner/work/movie-recs/movie-recs/api')
+from app import create_app
+# from api.app import create_app
 import unittest
 import requests
-import sys
-from os.path import join
-from os import path
-ROOT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
-print('ROOT_DIR=', ROOT_DIR)
-sys.path.append(ROOT_DIR)
-from api.app import create_app
 
 class TestApiApp(unittest.TestCase):
     def setUp(self) -> None:
