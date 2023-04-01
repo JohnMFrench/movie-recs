@@ -1,10 +1,11 @@
 import unittest
 import requests
 import sys
+from os.path import join
 from os import path
 ROOT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 print(ROOT_DIR)
-ROOT_DIR = sys.path.join(sys.path.append(ROOT_DIR), '..')
+ROOT_DIR = join(sys.path.append(ROOT_DIR), '../')
 sys.path.append(ROOT_DIR)
 
 from api.app import create_app
