@@ -41,6 +41,30 @@ class MovieRecommender:
         self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
             two_zscore)]
 
+    def add_movie_rating(self, movie_id, user_id, rating):
+        # Create a new dataframe with the new rating information
+        new_rating_df = pd.DataFrame({'user_id': [user_id],
+                                      'movie_id': [movie_id],
+                                      'rating': [rating],
+                                      'timestamp': [pd.Timestamp.now()]})
+
+        # concatenate the new rating to ratings_df
+        self.ratings_df = pd.concat([self.ratings_df, new_rating_df], ignore_index=True)
+
+        # recalculate the metadata for the movies
+        self.grouped_df = self.movies_df.join(self.ratings_df, on='movie_id').groupby(
+            'name').agg({'rating': ['mean', 'count']})
+        self.grouped_df['AvgRating'] = self.grouped_df[('rating', 'mean')]
+        self.grouped_df['Count'] = self.grouped_df[('rating', 'count')]
+
+        # update aggregations
+        rating_count_mean = self.grouped_df.agg({('rating', 'count'): 'mean'})
+        rating_count_std = self.grouped_df.std()[('rating', 'count')]
+
+        two_zscore = rating_count_mean + (2*rating_count_std)
+        self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
+            two_zscore)]
+
     # returns an array of the movie_id for all movies user has rated
     def get_user_movies(self, user_id: int):
         return set([int(x) for x in self.ratings_df[self.ratings_df['user_id'] == user_id].index])
@@ -73,7 +97,7 @@ class MovieRecommender:
         return str(self.movies_df[self.movies_df.index == movie_id]['genres'].values[0])
 
     def get_next_avail_user_id(self):
-        return self.ratings_df['user_id'].max()
+        return self.ratings_df['user_id'].max() + 1
 
     def get_user_movie_rating(self, user_id: int, movie_id: int):
         return int(self.ratings_df[(self.ratings_df['user_id'] == user_id) & (self.ratings_df.index == movie_id)]['rating'])
