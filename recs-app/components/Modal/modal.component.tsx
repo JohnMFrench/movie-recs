@@ -1,20 +1,9 @@
 import React from 'react';
 import styles from './modal.module.css';
-import Image from 'next/image';
-import ButtonContainer from '../ButtonContainer/button_container.component';
-
-interface Movie {
-    movie_id: string;
-    name: string;
-    rating: number;
-    count: number;
-    visible: boolean;
-    closing: boolean;
-}
+import Movie from '../MovieContainer/movie.type';
 
 type ModalProps = {
     visible: boolean;
-    compare_user_1: string;
     movie: Movie | null;
     onClose: () => void;
 };
