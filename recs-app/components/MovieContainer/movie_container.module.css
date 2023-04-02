@@ -20,7 +20,7 @@
   z-index: 2;
 }
 @media only screen and (max-width: 767px) {
-  .imageContainer:active.overlay {
+  .imageContainer:active .overlay {
     display: flex;
     flex-direction: column;
   }
