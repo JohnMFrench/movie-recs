@@ -22,7 +22,7 @@ interface MovieContainerProps {
 }
 
 function MovieContainer(props: MovieContainerProps) {
-  const [genres, setGenres] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string>();
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const imgElement = event.currentTarget;
@@ -64,9 +64,9 @@ function MovieContainer(props: MovieContainerProps) {
         <div className={styles.overlay}>
           <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
           <h2 className={styles.movieContainerGenres}>
-            {/* <em> */}
-            {genres}
-            {/* </em> */}
+            <em>
+            {genres && genres.replace(/\|/g, ' | ')}
+            </em>
           </h2>
           <ButtonContainer
             movie={props.movie}

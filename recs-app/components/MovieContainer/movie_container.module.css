@@ -16,7 +16,7 @@
 }
 
 .movieContainer:hover {
-  border: 3px solid gold;
+  /* border: 3px solid gold; */
   z-index: 2;
 }
 
@@ -30,14 +30,15 @@
   font-size: clamp(12px, 2vw, 3rem);
   padding: 0.5rem;
 }
-@media only screen and (max-width: 767px) {
-.movieContainerTitle {
-    padding: 0.15rem;
-}
-}
-
 .movieContainerGenres {
   font-size: clamp(0.25rem, 1vw, 3rem);
+}
+@media only screen and (max-width: 767px) {
+  .movieContainerTitle,
+  .movieContainerGenres {
+    padding: 0.15rem;
+    user-select: none;
+  }
 }
 
 .overlay {

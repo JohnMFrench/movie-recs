@@ -68,6 +68,7 @@ const Grid = () => {
     const numMoviesLiked: number =
       userPrefs.liked_movies.length + userPrefs.disliked_movies.length;
     setToastMessage(numMoviesLiked.toString());
+    setTimeout(() => setToastMessage(''), 500);
   }
 
   function onThumbsUpClick(

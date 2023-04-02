@@ -11,9 +11,9 @@
 
 .button {
   background-color: transparent;
-  font-size: 3rem;
-  border-radius: 3rem;
-  padding-bottom: 0.5rem;
+  font-size: 2rem;
+  border-radius: 2rem;
+  padding-bottom: 0.25rem;
 }
 
 @media only screen and (max-width: 767px) {
