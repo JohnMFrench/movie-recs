@@ -19,17 +19,10 @@
 .movieContainer:hover {
   z-index: 2;
 }
-@media only screen and (max-width: 767px) {
-  .imageContainer:active .overlay {
-    display: flex;
-    flex-direction: column;
-  }
-}
-@media only screen and (min-width: 767px) {
-  .imageContainer:hover .overlay {
-    display: flex;
-    flex-direction: column;
-  }
+.imageContainer:hover .overlay,
+.imageContainer:active .overlay {
+  display: flex;
+  flex-direction: column;
 }
 .movieImage {
   object-fit: "cover" !important;
