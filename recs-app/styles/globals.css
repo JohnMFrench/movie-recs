@@ -102,3 +102,8 @@ a {
   flex-direction: row;
   flex-wrap: wrap;
 }
+@media only screen and (max-width: 767px) {
+  .app-container {
+    padding-top: 10vh;
+  }
+}

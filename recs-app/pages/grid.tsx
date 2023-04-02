@@ -8,6 +8,7 @@ import Movie from "@/components/MovieContainer/movie.type";
 import MovieContainer from "@/components/MovieContainer/movie_container.component";
 import ToastProps from "@/components/Toast/toast.type";
 
+
 type UserPrefs = {
   liked_movies: Movie[];
   disliked_movies: Movie[];
@@ -175,7 +176,7 @@ const Grid = () => {
     <>
       <Navbar title={"MovieLens Recommendations"} />
       <HelpBar />
-      <div className="app-container">
+      <div className={"app-container"}>
         {movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
           <>
             {movie.visible && (
