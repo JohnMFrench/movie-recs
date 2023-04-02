@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './modal.module.css';
+import Image from 'next/image';
 import ButtonContainer from '../ButtonContainer/button_container.component';
 
 interface Movie {
@@ -13,6 +14,7 @@ interface Movie {
 
 type ModalProps = {
     visible: boolean;
+    compare_user_1: string;
     movie: Movie | null;
     onClose: () => void;
 };
@@ -26,6 +28,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, onClose }) => {
                 {movie &&
                     <>
                         <h2 className={styles.movieTitle}>{movie.name}</h2>
+                        <img src={'http://localhost:5000/api/compare/5/18'} alt="" />
                         <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                         {/* <ButtonContainer movie={movie}
                             onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {

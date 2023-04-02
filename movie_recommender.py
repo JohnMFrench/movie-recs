@@ -1,8 +1,12 @@
-import pandas as pd
-import numpy as np
-from re import compile
-from scipy import spatial, stats
+# fix from https://stackoverflow.com/a/74471578
 from adjustText import adjust_text
+from scipy import spatial, stats
+from re import compile
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('AGG')
 
 
 class MovieRecommender:
@@ -184,6 +188,10 @@ class MovieRecommender:
             'user1_ratings': user_1_ratings,
             'user2_ratings': user_2_ratings,
         }
+        fig, ax = plt.subplots()
+
+        # ax.scatter(user_1_ratings, user_2_ratings)
+
         users_common_ratings_df = pd.DataFrame(data=new_data)
         ax = users_common_ratings_df.plot.scatter(
             x='user1_ratings', y='user2_ratings')
