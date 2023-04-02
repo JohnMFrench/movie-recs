@@ -8,11 +8,11 @@ const Toast: React.FC<ToastProps> = ({ message, recButtonVisible }) => {
   useEffect(() => {
     if (message) {
       setIsVisible(true);
-      // if (!recButtonVisible) {
-      // }
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 1000);
+      if (!recButtonVisible) {
+        setTimeout(() => {
+          setIsVisible(false);
+        }, 1000);
+      }
     }
   }, [message]);
 
