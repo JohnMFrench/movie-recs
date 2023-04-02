@@ -15,11 +15,22 @@
   }
 }
 
+.movieContainer:active,
 .movieContainer:hover {
-  /* border: 3px solid gold; */
   z-index: 2;
 }
-
+@media only screen and (max-width: 767px) {
+  .imageContainer:active.overlay {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media only screen and (min-width: 767px) {
+  .imageContainer:hover .overlay {
+    display: flex;
+    flex-direction: column;
+  }
+}
 .movieImage {
   object-fit: "cover" !important;
   width: "100%" !important;
@@ -59,11 +70,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-}
-
-.imageContainer:hover .overlay {
-  display: flex;
-  flex-direction: column;
 }
 
 .closed {

@@ -38,6 +38,10 @@ def create_app():
 
         return movie_genres
 
+    @app.route('/api/user', methods=['GET'])
+    def get_next_avail_user_id():
+        return str(movie_rec.get_next_avail_user_id())
+
     @app.route('/api/compare/<user1_id>/<user2_id>', methods=['GET'])
     def get_user_ratings_plot(user1_id, user2_id):
         print(f'get_user_ratings_plot received {user1_id} and {user2_id}')
