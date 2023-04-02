@@ -151,18 +151,21 @@ const Grid = () => {
      * to contain an array of movies with their movie_id, name, rating, count, and visible properties.
      */
     useEffect(() => {
+        //fetch user_id from api endpoint
         const fetchNextUserID = async () => {
-            //fetch user_id from api endpoint
-            const response = await fetch("127.0.0.1:5000/api/user");
+            const response = await fetch("http://127.0.0.1:5000/api/user");
             if (!response) {
                 throw new Error("network error when trying to get user id");
             }
-            const next_id = await response.text();
-            setNextUserID(next_id);
+            const next_id = await response.text()
+            console.log(next_id);
+            if (typeof next_id == typeof "s") {
+                setNextUserID(next_id);
+            }
         }
 
+        // Fetch data from a JSON file containing top rated movies.
         const fetchMovies = async () => {
-            // Fetch data from a JSON file containing top rated movies.
             const response = await fetch("/top_rated_movies500.json");
             const data = await response.json();
 
@@ -190,7 +193,7 @@ const Grid = () => {
 
     return (
         <>
-            <Navbar title={"MovieLens Recommendations" + { nextUserID }} />
+            <Navbar title={"MovieLens Recommendations"} />
             <HelpBar />
             <div className={"app-container"}>
                 {movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
