@@ -144,6 +144,7 @@ class MovieRecommender:
             comparisons += 1
             if comparisons >= max_comparisons:
                 return most_similar_user
+        return most_similar_user
 
     def output_to_json(self, output_file='recs-app/public/top_rated_movies30.json') -> None:
         self.top_rated_movies.sort_values(
@@ -183,12 +184,12 @@ class MovieRecommender:
         # print(new_ratings_df)
         # print(ratings_df)
 
-    def handle_recommendation_request(self, liked_movies, disliked_movies):
-        rating_pairs = [(int(movie), 5) for movie in liked_movies]
-        rating_pairs.extend([(int(movie), 1) for movie in disliked_movies])
-        user_id = self.get_next_avail_user_id()
-        self.append_new_user_with_rating_pairs(rating_pairs)
-        return self.get_naive_recommendation(user_id)
+    # def handle_recommendation_request(self, liked_movies, disliked_movies):
+    #     rating_pairs = [(int(movie), 5) for movie in liked_movies]
+    #     rating_pairs.extend([(int(movie), 1) for movie in disliked_movies])
+    #     user_id = self.get_next_avail_user_id()
+    #     self.append_new_user_with_rating_pairs(rating_pairs)
+    #     return self.get_naive_recommendation(user_id)
 
     def get_movie_rating_count_percentile(self, movie_id: int):
         movie_name = self.get_movie_title(movie_id)
