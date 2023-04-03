@@ -11,6 +11,7 @@ import matplotlib
 matplotlib.use('AGG')
 
 sys.path.append("..")
+
 from movie_recommender import MovieRecommender
 
 

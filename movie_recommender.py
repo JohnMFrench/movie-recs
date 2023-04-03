@@ -127,11 +127,13 @@ class MovieRecommender:
         return movie_id_rating_pairs
 
     def get_most_similar_user(self, user_id: int):
+        print('called get_most_similar_user')
         comparisons = 0
         max_comparisons = 50
         most_similar_user = None
         most_similar_score = float(0)
         for id in self.ratings_df['user_id'].unique():
+            print(f'comparing similarity of {user_id} and {id}')
             similarity = self.get_user_similarity_score(user_id, id)
             if similarity != None and user_id != id:
                 if similarity > most_similar_score:
@@ -160,6 +162,7 @@ class MovieRecommender:
 
     def get_naive_recommendation(self, user_id: int):
         user2_id = self.get_most_similar_user(user_id)
+        print(f'found similar user of {user2_id}')
         recs = self.get_movie_recommendation(user_id, user2_id)
         for rec in recs:
             print(self.get_movie_title(rec[0]))
