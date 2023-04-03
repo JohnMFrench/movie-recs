@@ -62,16 +62,33 @@ def create_app():
 
         return response
 
+    # add one or a number of ratings
     @app.route('/api/ratings', methods=['POST'])
     def add_rating():
         data = request.get_json()
-        movie_id = int(data.get('movie_id'))
         user_id = int(data.get('user_id'))
-        rating = int(data.get('rating'))
 
-        # Do something with the rating data, such as add it to a database or update a model
-        movie_rec.add_movie_rating(
-            movie_id=movie_id, user_id=user_id, rating=rating)
+        # movie_id may be a single or list
+        movie_id = data.get('movie_id')
+        # rating may be a single or list
+        rating = data.get('rating')
+
+        if len(movie_id) == 1:
+            # add the rating to the movie recommender
+            movie_rec.add_movie_rating(
+                movie_id=movie_id, user_id=user_id, rating=rating)
+        else:
+            movie_rating_pairs = zip(movie_id, rating)
+            for pair in movie_rating_pairs:
+                movie_rec.add_movie_rating(
+                    movie_id=pair[0], user_id=user_id, rating=pair[1])
+            # movie_rec.get_most_similar_user()
+            user = movie_rec.get_most_similar_user(user_id)
+            # recs = movie_rec.get_naive_recommendation(user_id)
+            # get_user_ratings_plot(user_id, 5)
+            print(f'received {len(movie_id)} movies')
+            print(f'lookin gat user {user_id} similar to {user}')
+            return jsonify({'user': user})
 
         return jsonify({'message': 'Rating added successfully'})
 
@@ -81,10 +98,6 @@ def create_app():
         if request.method == 'POST':
             # Retrieve the JSON file from the POST request
             json_file = request.get_json()
-
-            # Do something with the JSON file
-            # For example, print the JSON file to the console
-            print(json_file)
 
             # Return a JSON response indicating success
             return jsonify({'message': 'JSON file uploaded successfully'})

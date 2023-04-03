@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./movie_container.module.css";
 import Movie from "./movie.type";
 import ButtonContainer from "../ButtonContainer/button_container.component";
+import Image from "next/image";
 import GenreDataService from "@/api/movies.api";
 
 interface MovieContainerProps {
@@ -22,6 +23,7 @@ interface MovieContainerProps {
 }
 
 function MovieContainer(props: MovieContainerProps) {
+  const s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
   const [genres, setGenres] = useState<string>();
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -29,17 +31,17 @@ function MovieContainer(props: MovieContainerProps) {
     imgElement.style.display = "none";
   };
 
-  useEffect(() => {
-    const genreDataService = new GenreDataService();
-    genreDataService
-      .getGenres(Number.parseInt(props.movie.movie_id))
-      .then((response) => {
-        setGenres(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   const genreDataService = new GenreDataService();
+  //   genreDataService
+  //     .getGenres(Number.parseInt(props.movie.movie_id))
+  //     .then((response) => {
+  //       setGenres(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   return (
     <div
@@ -50,22 +52,21 @@ function MovieContainer(props: MovieContainerProps) {
       onAnimationEnd={() => props.toggleMovieVisibility(props.movie.movie_id)}
     >
       <div className={styles.imageContainer}>
-        <img
+        <Image
           src={
-            "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/" +
+            s3BucketBaseURL +
             props.movie.movie_id +
             ".jpg"
           }
-          alt=""
-          onError={handleImageError}
-          style={{ objectFit: "cover", width: "100%", height: "100%" }}
           className={styles.movieImage}
+          fill={true}
+          alt={"Movie poster for " + props.movie.name}
         />
         <div className={styles.overlay}>
           <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
           <h2 className={styles.movieContainerGenres}>
             <em>
-            {genres && genres.replace(/\|/g, ' | ')}
+              {genres && genres.replace(/\|/g, ' | ')}
             </em>
           </h2>
           <ButtonContainer

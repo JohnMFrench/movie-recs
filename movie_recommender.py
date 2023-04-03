@@ -128,6 +128,7 @@ class MovieRecommender:
 
     def get_most_similar_user(self, user_id: int):
         comparisons = 0
+        max_comparisons = 50
         most_similar_user = None
         most_similar_score = float(0)
         for id in self.ratings_df['user_id'].unique():
@@ -141,7 +142,7 @@ class MovieRecommender:
                     print(
                         f'updated most similar ({most_similar_user} with score of {most_similar_score})')
             comparisons += 1
-            if comparisons >= 100:
+            if comparisons >= max_comparisons:
                 return most_similar_user
 
     def output_to_json(self, output_file='recs-app/public/top_rated_movies30.json') -> None:
@@ -161,6 +162,7 @@ class MovieRecommender:
         recs = self.get_movie_recommendation(user_id, user2_id)
         for rec in recs:
             print(self.get_movie_title(rec[0]))
+        return recs
 
     def append_new_user_with_rating_pairs(self, r_pairs) -> None:
         new_user_id = self.get_next_avail_user_id()
@@ -225,7 +227,7 @@ class MovieRecommender:
         for i, title in enumerate(movie_titles):
             texts.append(ax.text(user_1_ratings[i], user_2_ratings[i], title))
 
-        adjust_text(texts)
+        # adjust_text(texts)
         ax.set_xlim(0.25, 5.25)
         ax.set_ylim(0.25, 5.25)
         ax.plot()

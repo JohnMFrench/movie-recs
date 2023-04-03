@@ -175,28 +175,31 @@ const Grid = () => {
         //request recommendation after button is pressed
         const fetchUserRecommendation = async (prefs: UserPrefs) => {
             const apiUrl = 'http://127.0.0.1:5000/api/ratings';
-            for (const movie in prefs.liked_movies) {
-                const newRating = {
-                    movie_id: movie,
-                    user_id: nextUserID,
-                    rating: 5,
-                };
-                const requestOptions = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newRating)
-                };
-
-                try {
-                    const response = await fetch(apiUrl, requestOptions);
-                    if (!response.ok) {
-                        console.error('Failed to post rating:', response.status, response.statusText);
-                    } else {
-                        console.log('submitted rating for movie ' + movie);
-                    }
-                } catch (error) {
-                    console.error('Failed to post rating:', error);
+            const movie_ids = [];
+            const ratings = [];
+            for (let movie in prefs.liked_movies) {
+                movie_ids.push(movie)
+                ratings.push(5);
+            }
+            const newRating = {
+                movie_id: movie_ids,
+                user_id: nextUserID,
+                rating: ratings,
+            };
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newRating)
+            };
+            try {
+                const response = await fetch(apiUrl, requestOptions);
+                if (!response.ok) {
+                    console.error('Failed to post rating:', response.status, response.statusText);
+                } else {
+                    console.log('submitted rating for movies');
                 }
+            } catch (error) {
+                console.error('Failed to post rating:', error);
             }
         }
 
