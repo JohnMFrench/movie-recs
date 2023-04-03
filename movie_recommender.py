@@ -43,9 +43,9 @@ class MovieRecommender:
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
-        new_rating_df = pd.DataFrame({'user_id': [user_id],
-                                      'movie_id': [movie_id],
-                                      'rating': [rating],
+        new_rating_df = pd.DataFrame({'user_id': [int(user_id)],
+                                      'movie_id': [int(movie_id)],
+                                      'rating': [int(rating)],
                                       'timestamp': [pd.Timestamp.now()]})
 
         # concatenate the new rating to ratings_df

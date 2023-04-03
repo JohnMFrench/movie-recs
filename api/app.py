@@ -1,3 +1,5 @@
+from flask import Flask, request, jsonify
+import matplotlib.pyplot as plt
 import sys
 import io
 import os
@@ -8,11 +10,9 @@ from flask_cors import CORS
 import matplotlib
 matplotlib.use('AGG')
 
-import matplotlib.pyplot as plt
 sys.path.append("..")
-
-from flask import Flask, request, jsonify
 from movie_recommender import MovieRecommender
+
 
 def create_app():
     app = Flask(__name__)
@@ -24,16 +24,18 @@ def create_app():
     ratings_file = os.path.join(project_dir, '../data/ml-10M100K/ratings.dat')
 
     # instantiate recommender class to be used by api
-    movie_rec = MovieRecommender(movies_filename=movies_file, ratings_filename=ratings_file)
+    movie_rec = MovieRecommender(
+        movies_filename=movies_file, ratings_filename=ratings_file)
 
     @app.route('/api', methods=['GET'])
     def get_api_index():
-        return jsonify({'test':'json'})
+        return jsonify({'test': 'json'})
 
     @app.route('/api/movies/<movie_id>', methods=['GET'])
     def get_movie(movie_id):
         print(movie_id)
-        movie_genres = movie_rec.movies_df[movie_rec.movies_df.index == int(movie_id)]['genres'].values[0]
+        movie_genres = movie_rec.movies_df[movie_rec.movies_df.index == int(
+            movie_id)]['genres'].values[0]
         print(movie_genres)
 
         return movie_genres
@@ -47,7 +49,8 @@ def create_app():
     def get_user_ratings_plot(user1_id, user2_id):
         print(f'get_user_ratings_plot received {user1_id} and {user2_id}')
 
-        fig = movie_rec.plot_users_ratings(user1_id=int(user1_id), user2_id=int(user2_id))
+        fig = movie_rec.plot_users_ratings(
+            user1_id=int(user1_id), user2_id=int(user2_id))
 
         # create canvas object
         canvas = plt.get_current_fig_manager().canvas
@@ -58,6 +61,19 @@ def create_app():
         response.headers['Content-Type'] = 'image/png'
 
         return response
+
+    @app.route('/api/ratings', methods=['POST'])
+    def add_rating():
+        data = request.get_json()
+        movie_id = int(data.get('movie_id'))
+        user_id = int(data.get('user_id'))
+        rating = int(data.get('rating'))
+
+        # Do something with the rating data, such as add it to a database or update a model
+        movie_rec.add_movie_rating(
+            movie_id=movie_id, user_id=user_id, rating=rating)
+
+        return jsonify({'message': 'Rating added successfully'})
 
     # NOTE none of the code below has been tested
     @app.route('/api/recommend', methods=['POST'])

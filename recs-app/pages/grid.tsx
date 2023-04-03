@@ -11,8 +11,8 @@ import RecContainer from "@/components/RecContainer/rec_container.component";
 
 
 type UserPrefs = {
-    liked_movies: Movie[];
-    disliked_movies: Movie[];
+    liked_movies: Movie[] | null;
+    disliked_movies: Movie[] | null;
 };
 
 interface Props {
@@ -26,8 +26,8 @@ const Grid = () => {
     const defaultMoviesShown: number = 20;
     const [movies, setMovies] = useState<Movie[]>([]);
     const startingPrefs: UserPrefs = {
-        liked_movies: [],
-        disliked_movies: [],
+        liked_movies: null,
+        disliked_movies: null,
     };
     const [userPrefs, setUserPrefs] = useState(startingPrefs);
     const [moviesShown, setMoviesShown] = useState(defaultMoviesShown);
@@ -35,7 +35,7 @@ const Grid = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalFocusedMovie, setModalFocusedMovie] = useState<movieOrNull>(null);
     const [toastRecButtonVisible, setToastRecButtonVisible] = useState(false);
-    const [reContainerVisible, setRecContainerVisible] = useState(false);
+    // const [reContainerVisible, setRecContainerVisible] = useState(false);
     const [nextUserID, setNextUserID] = useState('');
 
     const toggleMovieClosing = (movie_id: string) =>
@@ -70,12 +70,23 @@ const Grid = () => {
     }
 
     function updateToastMessage() {
-        const numMoviesLiked: number =
-            userPrefs.liked_movies.length + userPrefs.disliked_movies.length;
-        setToastMessage(numMoviesLiked.toString());
-        // prevents toast from becoming visible again
-        setTimeout(() => setToastMessage(""), 1000);
+        if (userPrefs.liked_movies && userPrefs.disliked_movies) {
+            const numMoviesLiked: number =
+                userPrefs.liked_movies.length + userPrefs.disliked_movies.length;
+            setToastMessage(numMoviesLiked.toString());
+            // prevents toast from becoming visible again
+            setTimeout(() => setToastMessage(""), 1000);
+        }
     }
+
+    function onRequestReviewClick(
+        event: React.MouseEvent<HTMLDivElement>,
+        userPrefs: UserPrefs,
+    ): void {
+        console.log('clicked request review');
+        // TODO implement
+    }
+
 
     function onThumbsUpClick(
         event: React.MouseEvent<HTMLDivElement>,
@@ -89,7 +100,6 @@ const Grid = () => {
         if (movieToUpdate) {
             addLikedMovie(movieToUpdate);
         }
-        console.log("movies = " + movies.length);
     }
 
     function onNotSeenClick(
@@ -105,9 +115,14 @@ const Grid = () => {
     function addDislikedMovie(movie: Movie) {
         //push this disliked movie to the array of liked_movies
         // in userPrefs if it not already in
-        let l_m: Movie[] = userPrefs.disliked_movies;
-        if (l_m.indexOf(movie) == -1) {
-            l_m.push(movie);
+        let l_m: Movie[];
+        if (!userPrefs.disliked_movies) {
+            l_m = [movie];
+        } else {
+            l_m = userPrefs.disliked_movies;
+            if (l_m.indexOf(movie) == -1) {
+                l_m.push(movie);
+            }
         }
         const updatedUserPrefs: UserPrefs = {
             ...userPrefs,
@@ -121,10 +136,19 @@ const Grid = () => {
     function addLikedMovie(movie: Movie) {
         //push this liked movie to the array of liked_movies
         // in userPrefs if it not already in
-        let l_m: Movie[] = userPrefs.liked_movies;
-        if (l_m.indexOf(movie) == -1) {
-            l_m.push(movie);
+        let l_m: Movie[];
+        if (!userPrefs.liked_movies) {
+            console.log('no movies in l_m yet');
+            l_m = [movie];
+        } else {
+            l_m = userPrefs.liked_movies;
+            if (l_m.indexOf(movie) == -1) {
+                console.log('pushing movie to l_m');
+                l_m.push(movie);
+            }
         }
+        // console.log('l_m now');
+        // console.log(l_m);
         const updatedUserPrefs: UserPrefs = {
             ...userPrefs,
             liked_movies: l_m,
@@ -135,7 +159,7 @@ const Grid = () => {
         if (l_m.length >= 5) {
             setToastRecButtonVisible(true);
         }
-        console.log(userPrefs.liked_movies);
+        // console.log(userPrefs.liked_movies);
     }
 
     function onWindowScroll(e: any) {
@@ -146,11 +170,36 @@ const Grid = () => {
             setMoviesShown((prevMoviesShown) => prevMoviesShown + 10);
         }
     }
-    /**
-     * Fetch top rated movies data from a JSON file and update the state of `movies`
-     * to contain an array of movies with their movie_id, name, rating, count, and visible properties.
-     */
+    // all async behavior needs to be declared in the useEffect block
     useEffect(() => {
+        //request recommendation after button is pressed
+        const fetchUserRecommendation = async (prefs: UserPrefs) => {
+            const apiUrl = 'http://127.0.0.1:5000/api/ratings';
+            for (const movie in prefs.liked_movies) {
+                const newRating = {
+                    movie_id: movie,
+                    user_id: nextUserID,
+                    rating: 5,
+                };
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newRating)
+                };
+
+                try {
+                    const response = await fetch(apiUrl, requestOptions);
+                    if (!response.ok) {
+                        console.error('Failed to post rating:', response.status, response.statusText);
+                    } else {
+                        console.log('submitted rating for movie ' + movie);
+                    }
+                } catch (error) {
+                    console.error('Failed to post rating:', error);
+                }
+            }
+        }
+
         //fetch user_id from api endpoint
         const fetchNextUserID = async () => {
             const response = await fetch("http://127.0.0.1:5000/api/user");
@@ -187,9 +236,18 @@ const Grid = () => {
 
         // Call the `fetchMovies` function when the component mounts.
         fetchMovies();
+
         // Call the `fextNextUserID` function when the component mounts.
-        fetchNextUserID();
-    }, []);
+        if (!nextUserID) {
+            fetchNextUserID();
+        }
+
+        console.log('useEffect checking if fetchUserRecommendation should be called');
+        if (userPrefs.liked_movies) {
+            console.log('requesting user recommendations');
+            fetchUserRecommendation(userPrefs);
+        }
+    }, [toastRecButtonVisible]);
 
     return (
         <>
@@ -212,6 +270,7 @@ const Grid = () => {
                         <Toast
                             message={toastMessage}
                             recButtonVisible={toastRecButtonVisible}
+                            onRequestRecommendation={(e) => onRequestReviewClick(e, userPrefs)}
                         />
                     </>
                 ))}
@@ -222,7 +281,7 @@ const Grid = () => {
                         setModalVisible(false);
                     }}
                 />
-                <RecContainer type={"similar_user"} user1_id={"5"} user2_id={"9"} visible={reContainerVisible} />
+                <RecContainer type={"similar_user"} user1_id={"5"} user2_id={"9"} visible={toastRecButtonVisible} />
             </div>
         </>
     );

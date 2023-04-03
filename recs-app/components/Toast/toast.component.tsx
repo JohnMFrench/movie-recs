@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './toast.module.css';
 import ToastProps from './toast.type';
 
-const Toast: React.FC<ToastProps> = ({ message, recButtonVisible }) => {
+const Toast: React.FC<ToastProps> = ({ message, recButtonVisible, onRequestRecommendation }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,9 @@ const Toast: React.FC<ToastProps> = ({ message, recButtonVisible }) => {
         🍿{message}
       </div>
       {recButtonVisible &&
-        <div className={styles.recButton}>👥User-Based Recommendation</div>
+        <div className={styles.recButton} onClick={
+          (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => onRequestRecommendation(e)
+        }>👥User-Based Recommendation</div>
       }
       {/* </span> */}
     </div>
