@@ -31,25 +31,22 @@ class MovieRecommender:
         rating_count_std = self.grouped_df.std()[('rating', 'count')]
 
         two_zscore = rating_count_mean + (2*rating_count_std)
-        # ax = self.grouped_df.plot.scatter(
-        #     x=('rating', 'mean'), y=('rating', 'count'), alpha=0.25)
-        # ax.axhline(y=int(two_zscore))
-        # print('Average count of ratings per movie: ',
-        #   rating_count_mean.values[0])
-        # print('Average stdev of ratings per movie: ', rating_count_std)
-        # print('2Z value is at ', two_zscore.values[0])
         self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
             two_zscore)]
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
-        new_rating_df = pd.DataFrame({'user_id': [int(user_id)],
-                                      'movie_id': [int(movie_id)],
-                                      'rating': [int(rating)],
-                                      'timestamp': [pd.Timestamp.now()]})
+        new_rating_df = pd.DataFrame({'user_id': [np.int32(user_id)],
+                                      'movie_id': [np.int32(movie_id)],
+                                      'rating': [np.int32(rating)],
+                                      'timestamp': [np.float64(0)]})
+                                    #  dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+        new_rating_df.set_index('movie_id', inplace=True)
+        print(new_rating_df)
 
         # concatenate the new rating to ratings_df
-        self.ratings_df = pd.concat([self.ratings_df, new_rating_df], ignore_index=True)
+        self.ratings_df = pd.concat(
+            [self.ratings_df, new_rating_df], ignore_index=False)
 
         # recalculate the metadata for the movies
         self.grouped_df = self.movies_df.join(self.ratings_df, on='movie_id').groupby(
@@ -106,8 +103,8 @@ class MovieRecommender:
         common_movies = self.get_common_movies(user1_id, user2_id)
         # check if the users have no movies in common
         if len(common_movies) < 1:
-            # print(f'{user1_id} and {user2_id} have no movie ratings in common')
-            return
+            print(f'{user1_id} and {user2_id} have no movie ratings in common')
+            return 0.0
         user1_ratings = [self.get_user_movie_rating(
             user1_id, movie_id) for movie_id in common_movies]
         user2_ratings = [self.get_user_movie_rating(
@@ -135,9 +132,11 @@ class MovieRecommender:
         for id in self.ratings_df['user_id'].unique():
             print(f'comparing similarity of {user_id} and {id}')
             similarity = self.get_user_similarity_score(user_id, id)
+            print('found similarity of ' + str(similarity))
             if similarity != None and user_id != id:
                 if similarity > most_similar_score:
                     if similarity == float(1) and len(self.get_common_movies(user_id, id)) < 4:
+                        comparisons += 1
                         continue
                     most_similar_user = id
                     most_similar_score = similarity
@@ -168,31 +167,25 @@ class MovieRecommender:
             print(self.get_movie_title(rec[0]))
         return recs
 
-    def append_new_user_with_rating_pairs(self, r_pairs) -> None:
-        new_user_id = self.get_next_avail_user_id()
-        ratings = [p[1] for p in r_pairs]
-        movie_ids = [p[0] for p in r_pairs]
-        user_ids = [new_user_id for _ in range(0, len(r_pairs))]
-        timestamps = [None for _ in range(0, len(r_pairs))]
-        new_data = {
-            'user_id': user_ids,
-            'movie_id': movie_ids,
-            'rating': ratings,
-            'timestamp': timestamps
-        }
+    # TODO this can probably be taken out
+    # def append_new_user_with_rating_pairs(self, r_pairs) -> None:
+    #     new_user_id = self.get_next_avail_user_id()
+    #     ratings = [p[1] for p in r_pairs]
+    #     movie_ids = [p[0] for p in r_pairs]
+    #     user_ids = [new_user_id for _ in range(0, len(r_pairs))]
+    #     timestamps = [None for _ in range(0, len(r_pairs))]
+    #     new_data = {
+    #         'user_id': user_ids,
+    #         'movie_id': movie_ids,
+    #         'rating': ratings,
+    #         'timestamp': timestamps
+    #     }
 
-        new_ratings_df = pd.DataFrame(new_data)
-        appended_ratings_df = pd.concat([self.ratings_df, new_ratings_df])
-        print(appended_ratings_df)
-        # print(new_ratings_df)
-        # print(ratings_df)
-
-    # def handle_recommendation_request(self, liked_movies, disliked_movies):
-    #     rating_pairs = [(int(movie), 5) for movie in liked_movies]
-    #     rating_pairs.extend([(int(movie), 1) for movie in disliked_movies])
-    #     user_id = self.get_next_avail_user_id()
-    #     self.append_new_user_with_rating_pairs(rating_pairs)
-    #     return self.get_naive_recommendation(user_id)
+    #     new_ratings_df = pd.DataFrame(new_data)
+    #     appended_ratings_df = pd.concat([self.ratings_df, new_ratings_df])
+    #     print(appended_ratings_df)
+    #     # print(new_ratings_df)
+    #     # print(ratings_df)
 
     def get_movie_rating_count_percentile(self, movie_id: int):
         movie_name = self.get_movie_title(movie_id)

@@ -74,6 +74,8 @@ def create_app():
         # rating may be a single or list
         rating = data.get('rating')
 
+        print(f'received {len(movie_id)} movies')
+
         if len(movie_id) == 1:
             # add the rating to the movie recommender
             movie_rec.add_movie_rating(
@@ -83,24 +85,7 @@ def create_app():
             for pair in movie_rating_pairs:
                 movie_rec.add_movie_rating(
                     movie_id=pair[0], user_id=user_id, rating=pair[1])
-            # movie_rec.get_most_similar_user()
-            user = movie_rec.get_most_similar_user(user_id)
-            # recs = movie_rec.get_naive_recommendation(user_id)
-            # get_user_ratings_plot(user_id, 5)
-            print(f'received {len(movie_id)} movies')
-            print(f'lookin gat user {user_id} similar to {user}')
-            return jsonify({'user': user})
-
-        return jsonify({'message': 'Rating added successfully'})
-
-    # NOTE none of the code below has been tested
-    @app.route('/api/recommend', methods=['POST'])
-    def upload_json():
-        if request.method == 'POST':
-            # Retrieve the JSON file from the POST request
-            json_file = request.get_json()
-
-            # Return a JSON response indicating success
-            return jsonify({'message': 'JSON file uploaded successfully'})
-
-    return app
+        print(f'calling get_most_similar_user({user_id})')
+        user = movie_rec.get_most_similar_user(user_id)
+        print(f'looking at user {user_id} similar to {user}')
+        return jsonify({'user': str(user)})
