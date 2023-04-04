@@ -1,17 +1,23 @@
-recs-app/package-lock.json
 data/*
+
+# pycache
 api/__pycache__
-recs-app/public/*.ico
+__pycache__
+
+# unused source data
 recs-app/public/*50.json
 recs-app/public/*250.json
 recs-app/public/*archive.json
+
+# images
 recs-app/public/*.jpg
-__pycache__
+recs-app/public/*.png
+recs-app/public/*.ico
 node_modules
 .eslintrc.json
 
+# next, npm artifacts
+recs-app/package-lock.json
+
 # api virtual env
 api_env
-# api_env/Include
-# api_env/Lib
-# api_env/Scripts

@@ -86,7 +86,7 @@ const Grid = () => {
         userPrefs: UserPrefs,
     ): void {
         console.log('clicked request review');
-        // TODO implement
+        setModalVisible(true);
     }
 
 
@@ -247,7 +247,7 @@ const Grid = () => {
         if (!nextUserID) {
             fetchNextUserID();
         } else {
-            if (userPrefs.liked_movies) {
+            if (userPrefs.liked_movies && !mostSimilarUserID && !toastRecButtonVisible) {
                 ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
                     .then((data: any) => {
                         SetMostSimilarUseID(data);
@@ -261,7 +261,7 @@ const Grid = () => {
 
     return (
         <>
-            <Navbar title={"MovieLens Recommendations"} />
+            <Navbar title={"MovieLens Recommendations"+mostSimilarUserID} />
             <HelpBar />
             <div className={"app-container"}>
                 {movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
