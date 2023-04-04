@@ -55,7 +55,7 @@ function MovieContainer(props: MovieContainerProps) {
         <Image
           src={
             s3BucketBaseURL +
-            props.movie.movie_id +
+            props.movie.movie_id + 
             ".png"
           }
           className={styles.movieImage}
