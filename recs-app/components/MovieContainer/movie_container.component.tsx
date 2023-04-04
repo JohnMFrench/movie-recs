@@ -22,8 +22,11 @@ interface MovieContainerProps {
 }
 
 function MovieContainer(props: MovieContainerProps) {
-  const s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
+  let s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
   const [genres, setGenres] = useState<string>();
+  if (process.env.NODE_ENV === 'development') {
+    s3BucketBaseURL = '/';
+  }
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const imgElement = event.currentTarget;
