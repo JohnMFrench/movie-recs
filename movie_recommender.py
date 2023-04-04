@@ -30,9 +30,8 @@ class MovieRecommender:
         rating_count_mean = self.grouped_df.agg({('rating', 'count'): 'mean'})
         rating_count_std = self.grouped_df.std()[('rating', 'count')]
 
-        two_zscore = rating_count_mean + (2*rating_count_std)
-        self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
-            two_zscore)]
+        two_zscore = float(rating_count_mean + (2*rating_count_std))
+        self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > two_zscore]
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
@@ -40,7 +39,7 @@ class MovieRecommender:
                                       'movie_id': [np.int32(movie_id)],
                                       'rating': [np.int32(rating)],
                                       'timestamp': [np.float64(0)]})
-                                    #  dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+        #  dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
         new_rating_df.set_index('movie_id', inplace=True)
         print(new_rating_df)
 

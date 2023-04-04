@@ -89,3 +89,5 @@ def create_app():
         user = movie_rec.get_most_similar_user(user_id)
         print(f'looking at user {user_id} similar to {user}')
         return jsonify({'user': str(user)})
+
+    return app
