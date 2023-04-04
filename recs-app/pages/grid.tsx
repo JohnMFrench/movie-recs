@@ -8,6 +8,7 @@ import Movie from "@/components/MovieContainer/movie.type";
 import MovieContainer from "@/components/MovieContainer/movie_container.component";
 import ToastProps from "@/components/Toast/toast.type";
 import RecContainer from "@/components/RecContainer/rec_container.component";
+import RecommendationDataService from "@/api/recommendation.api";
 
 
 type UserPrefs = {
@@ -37,6 +38,7 @@ const Grid = () => {
     const [toastRecButtonVisible, setToastRecButtonVisible] = useState(false);
     // const [reContainerVisible, setRecContainerVisible] = useState(false);
     const [nextUserID, setNextUserID] = useState('');
+    const [mostSimilarUserID, SetMostSimilarUseID] = useState('');
 
     const toggleMovieClosing = (movie_id: string) =>
         setMovies(
@@ -156,7 +158,7 @@ const Grid = () => {
         setUserPrefs(updatedUserPrefs);
         updateToastMessage();
         // setModalVisible(true);
-        if (l_m.length >= 5) {
+        if (l_m.length >= 3) {
             setToastRecButtonVisible(true);
         }
         // console.log(userPrefs.liked_movies);
@@ -240,15 +242,20 @@ const Grid = () => {
         // Call the `fetchMovies` function when the component mounts.
         fetchMovies();
 
+        const ds = new RecommendationDataService();
         // Call the `fextNextUserID` function when the component mounts.
         if (!nextUserID) {
             fetchNextUserID();
-        }
-
-        console.log('useEffect checking if fetchUserRecommendation should be called');
-        if (userPrefs.liked_movies) {
-            console.log('requesting user recommendations');
-            fetchUserRecommendation(userPrefs);
+        } else {
+            if (userPrefs.liked_movies) {
+                ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
+                    .then((data: any) => {
+                        SetMostSimilarUseID(data);
+                    })
+                    .catch((e: any) => {
+                        console.log('caught error:' + e);
+                    })
+            }
         }
     }, [toastRecButtonVisible]);
 
@@ -284,7 +291,7 @@ const Grid = () => {
                         setModalVisible(false);
                     }}
                 />
-                <RecContainer type={"similar_user"} user1_id={"5"} user2_id={"9"} visible={toastRecButtonVisible} />
+                <RecContainer type={"similar_user"} user1_id={nextUserID} user2_id={mostSimilarUserID} visible={toastRecButtonVisible} />
             </div>
         </>
     );

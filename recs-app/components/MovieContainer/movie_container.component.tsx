@@ -3,7 +3,6 @@ import styles from "./movie_container.module.css";
 import Movie from "./movie.type";
 import ButtonContainer from "../ButtonContainer/button_container.component";
 import Image from "next/image";
-import GenreDataService from "@/api/movies.api";
 
 interface MovieContainerProps {
   movie: Movie;
@@ -31,6 +30,7 @@ function MovieContainer(props: MovieContainerProps) {
     imgElement.style.display = "none";
   };
 
+  // TODO genre should come with the metadata
   // useEffect(() => {
   //   const genreDataService = new GenreDataService();
   //   genreDataService

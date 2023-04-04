@@ -105,9 +105,9 @@ class MovieRecommender:
             print(f'{user1_id} and {user2_id} have no movie ratings in common')
             return 0.0
         user1_ratings = [self.get_user_movie_rating(
-            user1_id, movie_id) for movie_id in common_movies]
+            int(user1_id), movie_id) for movie_id in common_movies]
         user2_ratings = [self.get_user_movie_rating(
-            user2_id, movie_id) for movie_id in common_movies]
+            int(user2_id), movie_id) for movie_id in common_movies]
         error_in_common_movies = spatial.distance.euclidean(
             user1_ratings, user2_ratings)
         similarity_score = 1 / (1 + error_in_common_movies)
