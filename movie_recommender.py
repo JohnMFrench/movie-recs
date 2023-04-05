@@ -46,6 +46,10 @@ class MovieRecommender:
         two_zscore = float(rating_count_mean + (2*rating_count_std))
         self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > two_zscore]
 
+        # create a df to be used for KNN alg per demo
+        # https://github.com/rposhala/Recommender-System-on-MovieLens-dataset
+        
+
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
         new_rating_df = pd.DataFrame({'user_id': [np.int32(user_id)],
@@ -117,7 +121,8 @@ class MovieRecommender:
         min_common_movies = 2
         # check if the users have no movies in common
         if len(common_movies) < min_common_movies:
-            print(f'{user1_id} and {user2_id} have no movie ratings in common')
+            # if they have no common movies, similarity defaults to zero
+            # print(f'{user1_id} and {user2_id} have no movie ratings in common')
             return 0.0
         user1_ratings = [self.get_user_movie_rating(
             int(user1_id), movie_id) for movie_id in common_movies]
@@ -126,8 +131,8 @@ class MovieRecommender:
         error_in_common_movies = spatial.distance.euclidean(
             user1_ratings, user2_ratings)
         similarity_score = 1 / (1 + error_in_common_movies)
-        print(
-            f'Found similarity of {similarity_score} based on {len(common_movies)} in common')
+        # print(
+        #     f'Found similarity of {similarity_score} based on {len(common_movies)} in common')
         return similarity_score
 
     def get_movie_recommendation(self, user1_id: int, user2_id: int) -> int:
@@ -156,16 +161,12 @@ class MovieRecommender:
                         continue
                     most_similar_user = id
                     most_similar_score = similarity
-                    print(
-                        f'updated most similar ({most_similar_user} with score of {most_similar_score})')
+                    # print(
+                    #     f'updated most similar ({most_similar_user} with score of {most_similar_score})')
             comparisons += 1
             if comparisons >= max_comparisons:
                 return most_similar_user
         return most_similar_user
-
-        print(self.top_rated_movies.index)
-
-        self.top_rated_movies_slice.to_json(output_file, orient='index')
 
     def get_naive_recommendation(self, user_id: int):
         user2_id = self.get_most_similar_user(user_id)

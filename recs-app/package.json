@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "api-dev": "flask --app app/app.py --debug run",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

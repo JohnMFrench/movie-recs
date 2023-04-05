@@ -1,6 +1,6 @@
 function Get-Recommendation {
     
-    $json = '{"movie_id": [1, 2, 3, 4], "user_id": 71568, "rating": [5, 5, 5, 5]}'
+    $json = '{"movie_id": [1, 2, 48], "user_id": 71568, "rating": [5, 5, 5]}'
     $headers = @{ "Content-Type" = "application/json" }
 
     $response = Invoke-WebRequest -Uri 'http://localhost:5000/api/ratings' -Method POST -Headers $headers -Body $json

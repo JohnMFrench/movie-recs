@@ -85,9 +85,7 @@ def create_app():
             for pair in movie_rating_pairs:
                 movie_rec.add_movie_rating(
                     movie_id=pair[0], user_id=user_id, rating=pair[1])
-        print(f'calling get_most_similar_user({user_id})')
         user = movie_rec.get_most_similar_user(user_id)
-        print(f'looking at user {user_id} similar to {user}')
         return jsonify({'user': str(user)})
 
     return app
