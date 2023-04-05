@@ -6,18 +6,31 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
+import os
 matplotlib.use('AGG')
 
 
 class MovieRecommender:
+    # set static variables
+    _pickle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data\pickled')
+    _pickle_filename = 'movie_ratings.pkl'
+    pickle_path = os.path.join(_pickle_dir, _pickle_filename)
+
     def __init__(self, movies_filename, ratings_filename):
         try:
             self.movies_df = pd.read_csv(movies_filename, engine='python', encoding='utf-8',
                                          sep='::', header=None, names=['movie_id', 'name', 'genres'],
                                          index_col='movie_id', dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
-            self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
-                                          sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
-                                          index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+            # load ratings df from pickle if it exists
+            print(f'testing {self.pickle_path}')
+            if os.path.exists(self.pickle_path):
+                print(f'found pickle at {self.pickle_path}')
+                self.ratings_df = pd.read_pickle(self.pickle_path)
+            else:
+                print(f'no pickle found at {self.pickle_path}, loading from csv')
+                self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
+                                            sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
+                                            index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
         except Exception as e:
             print(f'Error occured while instantiating datafarmes: {e}')
 
@@ -39,15 +52,14 @@ class MovieRecommender:
                                       'movie_id': [np.int32(movie_id)],
                                       'rating': [np.int32(rating)],
                                       'timestamp': [np.float64(0)]})
-        #  dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
         new_rating_df.set_index('movie_id', inplace=True)
-        print(new_rating_df)
-
+        # print(new_rating_df)
 
         # concatenate the new rating to ratings_df
         self.ratings_df = pd.concat(
             [self.ratings_df, new_rating_df], ignore_index=False)
 
+        # TODO this metadata should be taken out or used
         # recalculate the metadata for the movies
         self.grouped_df = self.movies_df.join(self.ratings_df, on='movie_id').groupby(
             'name').agg({'rating': ['mean', 'count']})
@@ -57,8 +69,8 @@ class MovieRecommender:
         # update aggregations
         rating_count_mean = self.grouped_df.agg({('rating', 'count'): 'mean'})
         rating_count_std = self.grouped_df.std()[('rating', 'count')]
-
         two_zscore = rating_count_mean + (2*rating_count_std)
+        # refilter based on new zscore
         self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
             two_zscore)]
 
@@ -114,7 +126,8 @@ class MovieRecommender:
         error_in_common_movies = spatial.distance.euclidean(
             user1_ratings, user2_ratings)
         similarity_score = 1 / (1 + error_in_common_movies)
-        print(f'Found similarity of {similarity_score} based on {len(common_movies)} in common')
+        print(
+            f'Found similarity of {similarity_score} based on {len(common_movies)} in common')
         return similarity_score
 
     def get_movie_recommendation(self, user1_id: int, user2_id: int) -> int:
@@ -150,14 +163,6 @@ class MovieRecommender:
                 return most_similar_user
         return most_similar_user
 
-    def output_to_json(self, output_file='recs-app/public/top_rated_movies30.json') -> None:
-        self.top_rated_movies.sort_values(
-            by='Count', ascending=False, inplace=True)
-        top_rated_movies_names = self.top_rated_movies.index.values
-        self.top_rated_movies_slice = self.top_rated_movies.head(10)
-        self.top_rated_movies_slice.columns = self.top_rated_movies_slice.columns.get_level_values(
-            0)
-
         print(self.top_rated_movies.index)
 
         self.top_rated_movies_slice.to_json(output_file, orient='index')
@@ -169,26 +174,6 @@ class MovieRecommender:
         for rec in recs:
             print(self.get_movie_title(rec[0]))
         return recs
-
-    # TODO this can probably be taken out
-    # def append_new_user_with_rating_pairs(self, r_pairs) -> None:
-    #     new_user_id = self.get_next_avail_user_id()
-    #     ratings = [p[1] for p in r_pairs]
-    #     movie_ids = [p[0] for p in r_pairs]
-    #     user_ids = [new_user_id for _ in range(0, len(r_pairs))]
-    #     timestamps = [None for _ in range(0, len(r_pairs))]
-    #     new_data = {
-    #         'user_id': user_ids,
-    #         'movie_id': movie_ids,
-    #         'rating': ratings,
-    #         'timestamp': timestamps
-    #     }
-
-    #     new_ratings_df = pd.DataFrame(new_data)
-    #     appended_ratings_df = pd.concat([self.ratings_df, new_ratings_df])
-    #     print(appended_ratings_df)
-    #     # print(new_ratings_df)
-    #     # print(ratings_df)
 
     def get_movie_rating_count_percentile(self, movie_id: int):
         movie_name = self.get_movie_title(movie_id)
@@ -237,3 +222,17 @@ class MovieRecommender:
                                              movie1_id]['rating']
         print(movie1_ratings.values)
         return float(0)
+
+    def metadata_to_json(self, output_file='recs-app/public/top_rated_movies30.json') -> None:
+        self.top_rated_movies.sort_values(
+            by='Count', ascending=False, inplace=True)
+        top_rated_movies_names = self.top_rated_movies.index.values
+        self.top_rated_movies_slice = self.top_rated_movies.head(10)
+        self.top_rated_movies_slice.columns = self.top_rated_movies_slice.columns.get_level_values(
+            0)
+
+    def data_to_bin(self) -> None:
+        try:
+            self.ratings_df.to_pickle(self.pickle_dir + self.pickle_filename)
+        except Exception as e:
+            print(f'Error occured while trying to pickle: {e}')
