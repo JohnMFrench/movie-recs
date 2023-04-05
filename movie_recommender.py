@@ -209,6 +209,22 @@ class MovieRecommender:
         for rec in recs:
             print(self.get_movie_title(rec[0]))
         return recs
+    
+    # https://colab.research.google.com/github/rposhala/Recommender-System-on-MovieLens-dataset/blob/main/Item_based_Collaborative_Recommender_System_using_KNN.ipynb#scrollTo=ZAc5xnl2mZp3
+    def get_user_based_recommendation(self, user_id: int):
+        sim_users, distances = self.get_similar_users(user_id)
+        weightage_list = distances/np.sum(distances)
+        # print(weightage_list)
+        mov_rtngs_sim_users = self.mrm_df.values[sim_users]
+        movie_list = self.mrm_df.columns
+        weightage_list = weightage_list[:,np.newaxis] + np.zeros(len(movie_list))
+        new_rating_matrix = weightage_list*mov_rtngs_sim_users
+        mean_rating_list = new_rating_matrix.sum(axis =0)
+        # print(mean_rating_list)
+        n = min(len(mean_rating_list),3)
+        results = list(movie_list[np.argsort(mean_rating_list)[::-1][:n]])
+        for m in results:
+            print(self.get_movie_title(m))
 
     def get_movie_rating_count_percentile(self, movie_id: int):
         movie_name = self.get_movie_title(movie_id)
