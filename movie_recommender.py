@@ -7,6 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import os
+from scipy.sparse import csr_matrix
+from sklearn.neighbors import NearestNeighbors
+
 matplotlib.use('AGG')
 
 
@@ -21,9 +24,7 @@ class MovieRecommender:
             self.movies_df = pd.read_csv(movies_filename, engine='python', encoding='utf-8',
                                          sep='::', header=None, names=['movie_id', 'name', 'genres'],
                                          index_col='movie_id', dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
-                                        # dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
             # load ratings df from pickle if it exists
-            print(f'testing {self.pickle_path}')
             if os.path.exists(self.pickle_path):
                 print(f'found pickle at {self.pickle_path}')
                 self.ratings_df = pd.read_pickle(self.pickle_path)
@@ -32,7 +33,6 @@ class MovieRecommender:
                 self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
                                             sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
                                             index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
-                                            # dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
         except Exception as e:
             print(f'Error occured while instantiating datafarmes: {e}')
 
@@ -55,18 +55,33 @@ class MovieRecommender:
         # merge dataframes
         self.merged = pd.merge(self.ratings_df, no_index_movies, how="inner", on="movie_id")
         self.merged.drop(['timestamp', 'name', 'genres'], axis=1, inplace=True)
-        print(self.merged.head())
 
         # create [len(users) x len(movies)] dimensioned matrix
         self.mrm_df = self.merged.pivot(
             index='user_id',
             columns='movie_id',
-            values='rating',
+            values='rating'
         ).fillna(0)
-        self.mrm_df.head()
+        self.sparse_df = csr_matrix(self.mrm_df.values)
+        print(self.sparse_df)
+        self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
+        self.knn_model.fit(self.sparse_df)
+        # print(self.mrm_df)
+
+
+    # copied from github
+    def get_similar_users(self, user, n = 5):
+        ## input to this function is the user and number of top similar users you want.
+
+        knn_input = np.asarray([self.mrm_df.values[user-1]])  #.reshape(1,-1)
+        # knn_input = user_to_movie_df.iloc[0,:].values.reshape(1,-1)
+        distances, indices = self.knn_model.kneighbors(knn_input, n_neighbors=n+1)
         
-        # self.mrm_df = pd.DataFrame(index=self.merged.index, columns=self.merged.movie_id.values[:100])
-        print(self.mrm_df)
+        print("Top",n,"users who are very much similar to the User-",user, "are: ")
+        print(" ")
+        for i in range(1,len(distances[0])):
+            print(i,". User:", indices[0][i]+1, "separated by distance of",distances[0][i])
+        return indices.flatten()[1:] + 1, distances.flatten()[1:]
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
@@ -262,5 +277,5 @@ class MovieRecommender:
 movies_file = 'data/ml-10M100K/movies.dat'
 ratings_file = 'data/ml-10M100K/ratings.dat'
 mr = MovieRecommender(movies_filename=movies_file, ratings_filename=ratings_file)
-
+res = mr.get_similar_users(1)
 

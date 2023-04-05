@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./api"
+        "./api",
+        "c:\\users\\john.french\\appdata\\roaming\\python\\python310\\site-packages"
     ]
 }
