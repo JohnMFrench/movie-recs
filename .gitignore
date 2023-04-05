@@ -21,3 +21,6 @@ recs-app/package-lock.json
 
 # api virtual env
 api_env
+
+# archived scripts no longer used
+tests/scripts/*.py
