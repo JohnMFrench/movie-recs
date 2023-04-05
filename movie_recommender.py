@@ -21,6 +21,7 @@ class MovieRecommender:
             self.movies_df = pd.read_csv(movies_filename, engine='python', encoding='utf-8',
                                          sep='::', header=None, names=['movie_id', 'name', 'genres'],
                                          index_col='movie_id', dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
+                                        # dtype={'movie_id': np.int32, 'name': np.chararray, 'genres': np.chararray})
             # load ratings df from pickle if it exists
             print(f'testing {self.pickle_path}')
             if os.path.exists(self.pickle_path):
@@ -31,6 +32,7 @@ class MovieRecommender:
                 self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
                                             sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
                                             index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+                                            # dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
         except Exception as e:
             print(f'Error occured while instantiating datafarmes: {e}')
 
@@ -48,7 +50,23 @@ class MovieRecommender:
 
         # create a df to be used for KNN alg per demo
         # https://github.com/rposhala/Recommender-System-on-MovieLens-dataset
+        no_index_movies = self.movies_df.reset_index()
+
+        # merge dataframes
+        self.merged = pd.merge(self.ratings_df, no_index_movies, how="inner", on="movie_id")
+        self.merged.drop(['timestamp', 'name', 'genres'], axis=1, inplace=True)
+        print(self.merged.head())
+
+        # create [len(users) x len(movies)] dimensioned matrix
+        self.mrm_df = self.merged.pivot(
+            index='user_id',
+            columns='movie_id',
+            values='rating',
+        ).fillna(0)
+        self.mrm_df.head()
         
+        # self.mrm_df = pd.DataFrame(index=self.merged.index, columns=self.merged.movie_id.values[:100])
+        print(self.mrm_df)
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
@@ -238,3 +256,11 @@ class MovieRecommender:
             self.ratings_df.to_pickle(self.pickle_dir + self.pickle_filename)
         except Exception as e:
             print(f'Error occured while trying to pickle: {e}')
+
+# for quick testing
+# TODO take this out
+movies_file = 'data/ml-10M100K/movies.dat'
+ratings_file = 'data/ml-10M100K/ratings.dat'
+mr = MovieRecommender(movies_filename=movies_file, ratings_filename=ratings_file)
+
+
