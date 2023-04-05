@@ -16,20 +16,15 @@ type UserPrefs = {
     disliked_movies: Movie[] | null;
 };
 
-interface Props {
-    userPrefs: UserPrefs;
-    setUserPrefs: React.Dispatch<React.SetStateAction<UserPrefs>>;
-}
-
 type movieOrNull = Movie | null;
+const startingPrefs: UserPrefs = {
+    liked_movies: null,
+    disliked_movies: null,
+};
 
 const Grid = () => {
     const defaultMoviesShown: number = 20;
     const [movies, setMovies] = useState<Movie[]>([]);
-    const startingPrefs: UserPrefs = {
-        liked_movies: null,
-        disliked_movies: null,
-    };
     const [userPrefs, setUserPrefs] = useState(startingPrefs);
     const [moviesShown, setMoviesShown] = useState(defaultMoviesShown);
     const [toastMessage, setToastMessage] = useState("");
@@ -38,7 +33,8 @@ const Grid = () => {
     const [toastRecButtonVisible, setToastRecButtonVisible] = useState(false);
     // const [reContainerVisible, setRecContainerVisible] = useState(false);
     const [nextUserID, setNextUserID] = useState('');
-    const [mostSimilarUserID, SetMostSimilarUseID] = useState('');
+    const [mostSimilarUserID, setMostSimilarUseID] = useState('');
+    const [isRecRequested, setIsRecRequested] = useState(false);
 
     const toggleMovieClosing = (movie_id: string) =>
         setMovies(
@@ -62,13 +58,19 @@ const Grid = () => {
         toggleMovieClosing(movie.movie_id);
         setTimeout(() => {
             toggleMovieVisibility(movie.movie_id);
-        }, 500);
-        const movieToUpdate = movies.find(
-            (movie: Movie) => movie.movie_id == movie.movie_id
-        );
-        if (movieToUpdate) {
-            addDislikedMovie(movieToUpdate);
-        }
+        }, 1500);
+        addDislikedMovie(movie);
+    }
+
+    function onThumbsUpClick(
+        event: React.MouseEvent<HTMLDivElement>,
+        movie: Movie
+    ): void {
+        toggleMovieClosing(movie.movie_id);
+        setTimeout(() => {
+            toggleMovieVisibility(movie.movie_id);
+        }, 1500);
+        addLikedMovie(movie);
     }
 
     function updateToastMessage() {
@@ -90,19 +92,7 @@ const Grid = () => {
     }
 
 
-    function onThumbsUpClick(
-        event: React.MouseEvent<HTMLDivElement>,
-        movie_id: string
-    ): void {
-        // console.log('clicked up movie ' + movie_id)
-        toggleMovieClosing(movie_id);
-        const movieToUpdate = movies.find(
-            (movie: Movie) => movie.movie_id == movie_id
-        );
-        if (movieToUpdate) {
-            addLikedMovie(movieToUpdate);
-        }
-    }
+
 
     function onNotSeenClick(
         event: React.MouseEvent<HTMLDivElement>,
@@ -132,7 +122,7 @@ const Grid = () => {
         };
         setUserPrefs(updatedUserPrefs);
         updateToastMessage();
-        console.log(userPrefs.disliked_movies);
+        // console.log(userPrefs.disliked_movies);
     }
 
     function addLikedMovie(movie: Movie) {
@@ -140,17 +130,13 @@ const Grid = () => {
         // in userPrefs if it not already in
         let l_m: Movie[];
         if (!userPrefs.liked_movies) {
-            console.log('no movies in l_m yet');
             l_m = [movie];
         } else {
             l_m = userPrefs.liked_movies;
             if (l_m.indexOf(movie) == -1) {
-                console.log('pushing movie to l_m');
                 l_m.push(movie);
             }
         }
-        // console.log('l_m now');
-        // console.log(l_m);
         const updatedUserPrefs: UserPrefs = {
             ...userPrefs,
             liked_movies: l_m,
@@ -161,7 +147,6 @@ const Grid = () => {
         if (l_m.length >= 3) {
             setToastRecButtonVisible(true);
         }
-        // console.log(userPrefs.liked_movies);
     }
 
     function onWindowScroll(e: any) {
@@ -172,39 +157,13 @@ const Grid = () => {
             setMoviesShown((prevMoviesShown) => prevMoviesShown + 10);
         }
     }
+    //TODO take this out, only for testing
+    useEffect(() => {
+        console.log('CALLBACK FROM LIKED MOVIES');
+        console.log(userPrefs.liked_movies);
+    }, [userPrefs]);
     // all async behavior needs to be declared in the useEffect block
     useEffect(() => {
-        //request recommendation after button is pressed
-        const fetchUserRecommendation = async (prefs: UserPrefs) => {
-            const apiUrl = 'http://127.0.0.1:5000/api/ratings';
-            const movie_ids = [];
-            const ratings = [];
-            for (let movie in prefs.liked_movies) {
-                movie_ids.push(movie)
-                ratings.push(5);
-            }
-            const newRating = {
-                movie_id: movie_ids,
-                user_id: nextUserID,
-                rating: ratings,
-            };
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newRating)
-            };
-            try {
-                const response = await fetch(apiUrl, requestOptions);
-                if (!response.ok) {
-                    console.error('Failed to post rating:', response.status, response.statusText);
-                } else {
-                    console.log('submitted rating for movies');
-                }
-            } catch (error) {
-                console.error('Failed to post rating:', error);
-            }
-        }
-
         //fetch user_id from api endpoint
         const fetchNextUserID = async () => {
             const response = await fetch("http://127.0.0.1:5000/api/user");
@@ -233,6 +192,7 @@ const Grid = () => {
                 visible: true,
                 closing: false,
             }));
+            console.log(updatedMovieArray);
 
             // Update the state of `movies` with the array of movies.
             setMovies(updatedMovieArray);
@@ -247,10 +207,13 @@ const Grid = () => {
         if (!nextUserID) {
             fetchNextUserID();
         } else {
-            if (userPrefs.liked_movies && !mostSimilarUserID && !toastRecButtonVisible) {
+            if (userPrefs.liked_movies && !mostSimilarUserID && !isRecRequested) {
+                setIsRecRequested(true);
                 ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
                     .then((data: any) => {
-                        SetMostSimilarUseID(data);
+                        console.log('FOUND SIMILAR USER');
+                        console.log(data.user);
+                        setMostSimilarUseID(data.user);
                     })
                     .catch((e: any) => {
                         console.log('caught error:' + e);
@@ -261,16 +224,17 @@ const Grid = () => {
 
     return (
         <>
-            <Navbar title={"MovieLens Recommendations"+mostSimilarUserID} />
+            <Navbar title={"MovieLens Recommendations"} />
             <HelpBar />
             <div className={"app-container"}>
                 {movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
                     <>
                         {movie.visible && (
                             <MovieContainer
+                                key={movie.movie_id}
                                 movie={movie}
                                 onThumbsDownClick={(e) => onThumbsDownClick(e, movie)}
-                                onThumbsUpClick={onThumbsUpClick}
+                                onThumbsUpClick={(e) => onThumbsUpClick(e, movie)}
                                 onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) =>
                                     onNotSeenClick(e, movie)
                                 }
@@ -290,7 +254,8 @@ const Grid = () => {
                     onClose={function (): void {
                         setModalVisible(false);
                     }}
-                />
+                    userID={nextUserID}
+                    comparingUserID={mostSimilarUserID} />
                 <RecContainer type={"similar_user"} user1_id={nextUserID} user2_id={mostSimilarUserID} visible={toastRecButtonVisible} />
             </div>
         </>

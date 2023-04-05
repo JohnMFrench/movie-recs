@@ -5,10 +5,12 @@ import Movie from '../MovieContainer/movie.type';
 type ModalProps = {
     visible: boolean;
     movie: Movie | null;
+    userID: string
+    comparingUserID: string;
     onClose: () => void;
 };
 
-const Modal: React.FC<ModalProps> = ({ visible, movie, onClose }) => {
+const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, onClose }) => {
     const modalClassName = visible ? styles.modalVisible : styles.modalHidden;
 
     return (
@@ -17,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, onClose }) => {
                 {movie &&
                     <>
                         <h2 className={styles.movieTitle}>{movie.name}</h2>
-                        <img src={'http://localhost:5000/api/compare/5/18'} alt="" />
+                        <img src={'http://localhost:5000/api/compare/'+userID+'/'+comparingUserID} alt="" />
                         {/* <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" /> */}
                         {/* <ButtonContainer movie={movie}
                             onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {

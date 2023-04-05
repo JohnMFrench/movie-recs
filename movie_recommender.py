@@ -43,6 +43,7 @@ class MovieRecommender:
         new_rating_df.set_index('movie_id', inplace=True)
         print(new_rating_df)
 
+        
         # concatenate the new rating to ratings_df
         self.ratings_df = pd.concat(
             [self.ratings_df, new_rating_df], ignore_index=False)

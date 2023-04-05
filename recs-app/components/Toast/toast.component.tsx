@@ -4,6 +4,7 @@ import ToastProps from './toast.type';
 
 const Toast: React.FC<ToastProps> = ({ message, recButtonVisible, onRequestRecommendation }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const timeoutLength: number = 2000;
 
   useEffect(() => {
     if (message) {
@@ -11,7 +12,7 @@ const Toast: React.FC<ToastProps> = ({ message, recButtonVisible, onRequestRecom
       if (!recButtonVisible) {
         setTimeout(() => {
           setIsVisible(false);
-        }, 1000);
+        }, timeoutLength);
       }
     }
   }, [message]);
