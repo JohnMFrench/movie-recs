@@ -16,6 +16,10 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
     return (
         <div className={modalClassName} onClick={onClose}>
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
+                <ul>
+                    <li>userID={userID}</li>
+                    <li>comparingUserID={comparingUserID}</li>
+                </ul>
                 {movie &&
                     <>
                         <h2 className={styles.movieTitle}>{movie.name}</h2>

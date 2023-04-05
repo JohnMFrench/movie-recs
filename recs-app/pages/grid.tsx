@@ -1,12 +1,10 @@
 import React, { useState, useEffect, SyntheticEvent } from "react";
 import HelpBar from "@/components/HelpBar/helpbar.component";
 import Navbar from "@/components/NavBar/navbar.component";
-import ButtonContainer from "@/components/ButtonContainer/button_container.component";
 import Toast from "@/components/Toast/toast.component";
 import Modal from "@/components/Modal/modal.component";
 import Movie from "@/components/MovieContainer/movie.type";
 import MovieContainer from "@/components/MovieContainer/movie_container.component";
-import ToastProps from "@/components/Toast/toast.type";
 import RecContainer from "@/components/RecContainer/rec_container.component";
 import RecommendationDataService from "@/api/recommendation.api";
 
@@ -91,14 +89,10 @@ const Grid = () => {
         setModalVisible(true);
     }
 
-
-
-
     function onNotSeenClick(
         event: React.MouseEvent<HTMLDivElement>,
         movie: Movie
     ): void {
-        // console.log('clicked not seen ' + movie_id)
         // toggleMovieClosing(movie_id);
         setModalVisible(true);
         setModalFocusedMovie(movie);
@@ -122,7 +116,6 @@ const Grid = () => {
         };
         setUserPrefs(updatedUserPrefs);
         updateToastMessage();
-        // console.log(userPrefs.disliked_movies);
     }
 
     function addLikedMovie(movie: Movie) {
@@ -157,11 +150,22 @@ const Grid = () => {
             setMoviesShown((prevMoviesShown) => prevMoviesShown + 10);
         }
     }
+
     //TODO take this out, only for testing
     useEffect(() => {
         console.log('CALLBACK FROM LIKED MOVIES');
         console.log(userPrefs.liked_movies);
     }, [userPrefs]);
+
+    //try to use useEffect to change how the recommendation button is displayed
+    useEffect(() => {
+        console.log('grid received new mostSimilarUserID');
+        if (mostSimilarUserID) {
+            setToastRecButtonVisible(true);
+            setModalVisible(true);
+        }
+    }, [mostSimilarUserID]);
+
     // all async behavior needs to be declared in the useEffect block
     useEffect(() => {
         //fetch user_id from api endpoint
@@ -171,7 +175,6 @@ const Grid = () => {
                 throw new Error("network error when trying to get user id");
             }
             const next_id = await response.text()
-            console.log(next_id);
             if (typeof next_id == typeof "s") {
                 setNextUserID(next_id);
             }
@@ -192,7 +195,6 @@ const Grid = () => {
                 visible: true,
                 closing: false,
             }));
-            console.log(updatedMovieArray);
 
             // Update the state of `movies` with the array of movies.
             setMovies(updatedMovieArray);
@@ -231,7 +233,7 @@ const Grid = () => {
                     <>
                         {movie.visible && (
                             <MovieContainer
-                                key={movie.movie_id}
+                                key={i}
                                 movie={movie}
                                 onThumbsDownClick={(e) => onThumbsDownClick(e, movie)}
                                 onThumbsUpClick={(e) => onThumbsUpClick(e, movie)}
