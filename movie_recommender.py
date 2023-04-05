@@ -102,8 +102,9 @@ class MovieRecommender:
 
     def get_user_similarity_score(self, user1_id: int, user2_id: int):
         common_movies = self.get_common_movies(user1_id, user2_id)
+        min_common_movies = 2
         # check if the users have no movies in common
-        if len(common_movies) < 1:
+        if len(common_movies) < min_common_movies:
             print(f'{user1_id} and {user2_id} have no movie ratings in common')
             return 0.0
         user1_ratings = [self.get_user_movie_rating(
