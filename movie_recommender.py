@@ -43,7 +43,7 @@ class MovieRecommender:
         new_rating_df.set_index('movie_id', inplace=True)
         print(new_rating_df)
 
-        
+
         # concatenate the new rating to ratings_df
         self.ratings_df = pd.concat(
             [self.ratings_df, new_rating_df], ignore_index=False)
@@ -113,6 +113,7 @@ class MovieRecommender:
         error_in_common_movies = spatial.distance.euclidean(
             user1_ratings, user2_ratings)
         similarity_score = 1 / (1 + error_in_common_movies)
+        print(f'Found similarity of {similarity_score} based on {len(common_movies)} in common')
         return similarity_score
 
     def get_movie_recommendation(self, user1_id: int, user2_id: int) -> int:
@@ -127,13 +128,13 @@ class MovieRecommender:
     def get_most_similar_user(self, user_id: int):
         print('called get_most_similar_user')
         comparisons = 0
-        max_comparisons = 50
+        max_comparisons = 200
         most_similar_user = None
         most_similar_score = float(0)
         for id in self.ratings_df['user_id'].unique():
-            print(f'comparing similarity of {user_id} and {id}')
+            # print(f'comparing similarity of {user_id} and {id}')
             similarity = self.get_user_similarity_score(user_id, id)
-            print('found similarity of ' + str(similarity))
+            # print('found similarity of ' + str(similarity))
             if similarity != None and user_id != id:
                 if similarity > most_similar_score:
                     if similarity == float(1) and len(self.get_common_movies(user_id, id)) < 4:
