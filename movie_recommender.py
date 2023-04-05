@@ -57,7 +57,9 @@ class MovieRecommender:
                                       'rating': [np.int32(rating)],
                                       'timestamp': [np.float64(0)]})
         new_rating_df.set_index('movie_id', inplace=True)
-        # print(new_rating_df)
+        if self.ratings_df.loc[(self.ratings_df.index == movie_id) & (self.ratings_df.user_id == user_id)].values.any():
+            print(f'ENDING add_movie_rating() to prevent {movie_id} review added twice for {user_id}')
+            return 
 
         # concatenate the new rating to ratings_df
         self.ratings_df = pd.concat(
@@ -114,7 +116,6 @@ class MovieRecommender:
 
     def get_user_movie_rating(self, user_id: int, movie_id: int):
         return int(self.ratings_df.loc[(self.ratings_df['user_id'] == user_id) & (self.ratings_df.index == movie_id), 'rating'])
-        # return int(self.ratings_df[(self.ratings_df['user_id'] == user_id) & (self.ratings_df['movie_id'] == movie_id)]['rating'])
 
     def get_user_similarity_score(self, user1_id: int, user2_id: int):
         common_movies = self.get_common_movies(user1_id, user2_id)
