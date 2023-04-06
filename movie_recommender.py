@@ -15,7 +15,8 @@ matplotlib.use('AGG')
 
 class MovieRecommender:
     # set static variables
-    _pickle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data\pickled')
+    _pickle_dir = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data\pickled')
     _pickle_filename = 'movie_ratings.pkl'
     pickle_path = os.path.join(_pickle_dir, _pickle_filename)
 
@@ -29,10 +30,11 @@ class MovieRecommender:
                 print(f'found pickle at {self.pickle_path}')
                 self.ratings_df = pd.read_pickle(self.pickle_path)
             else:
-                print(f'no pickle found at {self.pickle_path}, loading from csv')
+                print(
+                    f'no pickle found at {self.pickle_path}, loading from csv')
                 self.ratings_df = pd.read_csv(ratings_filename, engine='python', encoding='utf-8',
-                                            sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
-                                            index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
+                                              sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],
+                                              index_col='movie_id', dtype={'user_id': np.int32, 'movie_id': np.int32, 'rating': np.int32, 'timestamp': np.float64})
         except Exception as e:
             print(f'Error occured while instantiating datafarmes: {e}')
 
@@ -53,9 +55,11 @@ class MovieRecommender:
         no_index_movies = self.movies_df.reset_index()
 
         # merge dataframes
-        self.merged = pd.merge(self.ratings_df, no_index_movies, how="inner", on="movie_id")
+        self.merged = pd.merge(
+            self.ratings_df, no_index_movies, how="inner", on="movie_id")
         self.merged.drop(['timestamp', 'name', 'genres'], axis=1, inplace=True)
-        self.merged.groupby(by=['user_id', 'movie_id'], as_index=False).agg({"rating":"mean"})
+        self.merged.groupby(by=['user_id', 'movie_id'],
+                            as_index=False).agg({"rating": "mean"})
 
         # create [len(users) x len(movies)] dimensioned matrix
         self.mrm_df = self.merged.pivot(
@@ -69,52 +73,52 @@ class MovieRecommender:
         # self.knn_model.fit(self.sparse_df)
         self.user_data = ''
 
-
     # copied from github
-    def get_similar_users(self, user:int, n = 3):
-        print('get similar users called on user ', user, ' with type ', type(user))
-        ## input to this function is the user and number of top similar users you want.
-        print(f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
+    def get_similar_users(self, user: int, n=3):
+        print('get similar users called on user ',
+              user, ' with type ', type(user))
+        # input to this function is the user and number of top similar users you want.
+        print(
+            f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
         print(f'values for {user}')
         # print(self.mrm_df.values[user-1])
-        if self.user_data:
-            knn_input = self.user_data
-        else: 
-            knn_input = np.asarray([self.mrm_df.values[user]])
-        # print(f' user_Data = {self.user_data}')
+        # if self.user_data != '':
+        knn_input = self.user_data
+        # else:
+        # knn_input = np.asarray([self.mrm_df.values[user]])
         print(f'knn_input with shape of {knn_input.shape}')
         print(knn_input)
         if len(knn_input.shape) > 2:
             print(f'knn_input has too many dimensions {knn_input.shape}')
-            knn_input = knn_input[:,:,0]
+            knn_input = knn_input[:, :, 0]
             # knn_input = knn_input.squeeze(axis=1)
-        print(f'get_similar_users called with knn_input shape of {knn_input.shape}')
-        # knn_input = knn_input.reshape((1, len(self.mrm_df.columns)))
-        # knn_input = user_to_movie_df.iloc[0,:].values.reshape(1,-1)
-        distances, indices = self.knn_model.kneighbors(knn_input, n_neighbors=n+1)
-        
+        print(
+            f'get_similar_users called with knn_input shape of {knn_input.shape}')
+        distances, indices = self.knn_model.kneighbors(
+            knn_input, n_neighbors=n+1)
+
         print(f"Top {n} users who are very much similar to the User- {user}are: ")
-        for i in range(1,len(distances[0])):
-            print(i,". User:", indices[0][i]+1, "separated by distance of",distances[0][i])
+        for i in range(1, len(distances[0])):
+            print(i, ". User:", indices[0][i]+1,
+                  "separated by distance of", distances[0][i])
         return indices.flatten()[1:], distances.flatten()[1:]
-        # return indices.flatten()[1:] + 1, distances.flatten()[1:]
 
     def refit_model(self):
         self.sparse_df = csr_matrix(self.mrm_df.values)
         self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
         self.knn_model.fit(self.sparse_df)
-    
-    def new_add_movie_rating(self, movie_id:int, user_id:int, rating:int):
+
+    def new_add_movie_rating(self, movie_id: int, user_id: int, rating: int):
         print(f'started add_movie_rating with user of {user_id}')
         print(self.mrm_df.shape)
-        new_rating_df = pd.DataFrame(0, columns=self.mrm_df.columns, index=[user_id])
+        new_rating_df = pd.DataFrame(
+            0, columns=self.mrm_df.columns, index=[user_id])
         new_rating_df[movie_id] = rating
         self.user_data = new_rating_df
         print(self.user_data.head())
         self.mrm_df = pd.concat([self.mrm_df, new_rating_df])
         self.mrm_df.fillna(0, inplace=True)
         print(self.mrm_df.shape)
-        
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
@@ -124,8 +128,9 @@ class MovieRecommender:
                                       'timestamp': [np.float64(0)]})
         new_rating_df.set_index('movie_id', inplace=True)
         if self.ratings_df.loc[(self.ratings_df.index == movie_id) & (self.ratings_df.user_id == user_id)].values.any():
-            print(f'ENDING add_movie_rating() to prevent {movie_id} review added twice for {user_id}')
-            return 
+            print(
+                f'ENDING add_movie_rating() to prevent {movie_id} review added twice for {user_id}')
+            return
 
         # concatenate the new rating to ratings_df
         self.ratings_df = pd.concat(
@@ -242,7 +247,7 @@ class MovieRecommender:
         for rec in recs:
             print(self.get_movie_title(rec[0]))
         return recs
-    
+
     # https://colab.research.google.com/github/rposhala/Recommender-System-on-MovieLens-dataset/blob/main/Item_based_Collaborative_Recommender_System_using_KNN.ipynb#scrollTo=ZAc5xnl2mZp3
     def get_user_based_recommendation(self, user_id: int):
         print(f'get user recommendation started for {user_id}')
@@ -251,11 +256,12 @@ class MovieRecommender:
         # print(weightage_list)
         mov_rtngs_sim_users = self.mrm_df.values[sim_users]
         movie_list = self.mrm_df.columns
-        weightage_list = weightage_list[:,np.newaxis] + np.zeros(len(movie_list))
+        weightage_list = weightage_list[:,
+                                        np.newaxis] + np.zeros(len(movie_list))
         new_rating_matrix = weightage_list*mov_rtngs_sim_users
-        mean_rating_list = new_rating_matrix.sum(axis =0)
+        mean_rating_list = new_rating_matrix.sum(axis=0)
         # print(mean_rating_list)
-        n = min(len(mean_rating_list),3)
+        n = min(len(mean_rating_list), 3)
         results = list(movie_list[np.argsort(mean_rating_list)[::-1][:n]])
         for m in results:
             print(self.get_movie_title(m))
@@ -322,10 +328,10 @@ class MovieRecommender:
         except Exception as e:
             print(f'Error occured while trying to pickle: {e}')
 
+
 # for quick testing
 # TODO take this out
 movies_file = 'data/ml-10M100K/movies.dat'
 ratings_file = 'data/ml-10M100K/ratings.dat'
 # # mr = MovieRecommender(movies_filename=movies_file, ratings_filename=ratings_file)
 # res = mr.get_similar_users(1)
-
