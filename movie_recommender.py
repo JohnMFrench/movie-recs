@@ -55,6 +55,7 @@ class MovieRecommender:
         # merge dataframes
         self.merged = pd.merge(self.ratings_df, no_index_movies, how="inner", on="movie_id")
         self.merged.drop(['timestamp', 'name', 'genres'], axis=1, inplace=True)
+        self.merged.groupby(by=['user_id', 'movie_id'], as_index=False).agg({"rating":"mean"})
 
         # create [len(users) x len(movies)] dimensioned matrix
         self.mrm_df = self.merged.pivot(
@@ -62,26 +63,58 @@ class MovieRecommender:
             columns='movie_id',
             values='rating'
         ).fillna(0)
-        self.sparse_df = csr_matrix(self.mrm_df.values)
-        print(self.sparse_df)
-        self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
-        self.knn_model.fit(self.sparse_df)
-        # print(self.mrm_df)
+        # self.sparse_df = csr_matrix(self.mrm_df.values)
+        # print(self.sparse_df)
+        # self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
+        # self.knn_model.fit(self.sparse_df)
+        self.user_data = ''
 
 
     # copied from github
-    def get_similar_users(self, user, n = 5):
+    def get_similar_users(self, user:int, n = 3):
+        print('get similar users called on user ', user, ' with type ', type(user))
         ## input to this function is the user and number of top similar users you want.
-
-        knn_input = np.asarray([self.mrm_df.values[user-1]])  #.reshape(1,-1)
+        print(f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
+        print(f'values for {user}')
+        # print(self.mrm_df.values[user-1])
+        if self.user_data:
+            knn_input = self.user_data
+        else: 
+            knn_input = np.asarray([self.mrm_df.values[user]])
+        # print(f' user_Data = {self.user_data}')
+        print(f'knn_input with shape of {knn_input.shape}')
+        print(knn_input)
+        if len(knn_input.shape) > 2:
+            print(f'knn_input has too many dimensions {knn_input.shape}')
+            knn_input = knn_input[:,:,0]
+            # knn_input = knn_input.squeeze(axis=1)
+        print(f'get_similar_users called with knn_input shape of {knn_input.shape}')
+        # knn_input = knn_input.reshape((1, len(self.mrm_df.columns)))
         # knn_input = user_to_movie_df.iloc[0,:].values.reshape(1,-1)
         distances, indices = self.knn_model.kneighbors(knn_input, n_neighbors=n+1)
         
-        print("Top",n,"users who are very much similar to the User-",user, "are: ")
-        print(" ")
+        print(f"Top {n} users who are very much similar to the User- {user}are: ")
         for i in range(1,len(distances[0])):
             print(i,". User:", indices[0][i]+1, "separated by distance of",distances[0][i])
-        return indices.flatten()[1:] + 1, distances.flatten()[1:]
+        return indices.flatten()[1:], distances.flatten()[1:]
+        # return indices.flatten()[1:] + 1, distances.flatten()[1:]
+
+    def refit_model(self):
+        self.sparse_df = csr_matrix(self.mrm_df.values)
+        self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
+        self.knn_model.fit(self.sparse_df)
+    
+    def new_add_movie_rating(self, movie_id:int, user_id:int, rating:int):
+        print(f'started add_movie_rating with user of {user_id}')
+        print(self.mrm_df.shape)
+        new_rating_df = pd.DataFrame(0, columns=self.mrm_df.columns, index=[user_id])
+        new_rating_df[movie_id] = rating
+        self.user_data = new_rating_df
+        print(self.user_data.head())
+        self.mrm_df = pd.concat([self.mrm_df, new_rating_df])
+        self.mrm_df.fillna(0, inplace=True)
+        print(self.mrm_df.shape)
+        
 
     def add_movie_rating(self, movie_id, user_id, rating):
         # Create a new dataframe with the new rating information
@@ -212,6 +245,7 @@ class MovieRecommender:
     
     # https://colab.research.google.com/github/rposhala/Recommender-System-on-MovieLens-dataset/blob/main/Item_based_Collaborative_Recommender_System_using_KNN.ipynb#scrollTo=ZAc5xnl2mZp3
     def get_user_based_recommendation(self, user_id: int):
+        print(f'get user recommendation started for {user_id}')
         sim_users, distances = self.get_similar_users(user_id)
         weightage_list = distances/np.sum(distances)
         # print(weightage_list)
@@ -292,6 +326,6 @@ class MovieRecommender:
 # TODO take this out
 movies_file = 'data/ml-10M100K/movies.dat'
 ratings_file = 'data/ml-10M100K/ratings.dat'
-mr = MovieRecommender(movies_filename=movies_file, ratings_filename=ratings_file)
-res = mr.get_similar_users(1)
+# # mr = MovieRecommender(movies_filename=movies_file, ratings_filename=ratings_file)
+# res = mr.get_similar_users(1)
 
