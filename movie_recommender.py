@@ -38,18 +38,6 @@ class MovieRecommender:
         except Exception as e:
             print(f'Error occured while instantiating datafarmes: {e}')
 
-        # join the two dataframes and group to determine metadata
-        self.grouped_df = self.movies_df.join(self.ratings_df, on='movie_id').groupby(
-            'name').agg({'rating': ['mean', 'count']})
-        self.grouped_df['AvgRating'] = self.grouped_df[('rating', 'mean')]
-        self.grouped_df['Count'] = self.grouped_df[('rating', 'count')]
-
-        rating_count_mean = self.grouped_df.agg({('rating', 'count'): 'mean'})
-        rating_count_std = self.grouped_df.std()[('rating', 'count')]
-
-        two_zscore = float(rating_count_mean + (2*rating_count_std))
-        self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > two_zscore]
-
         # create a df to be used for KNN alg per demo
         # https://github.com/rposhala/Recommender-System-on-MovieLens-dataset
         no_index_movies = self.movies_df.reset_index()
@@ -67,10 +55,6 @@ class MovieRecommender:
             columns='movie_id',
             values='rating'
         ).fillna(0)
-        # self.sparse_df = csr_matrix(self.mrm_df.values)
-        # print(self.sparse_df)
-        # self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
-        # self.knn_model.fit(self.sparse_df)
         self.user_data = ''
 
     # copied from github
@@ -81,13 +65,9 @@ class MovieRecommender:
         print(
             f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
         print(f'values for {user}')
-        # print(self.mrm_df.values[user-1])
-        # if self.user_data != '':
         knn_input = self.user_data
-        # else:
-        # knn_input = np.asarray([self.mrm_df.values[user]])
+             
         print(f'knn_input with shape of {knn_input.shape}')
-        print(knn_input)
         if len(knn_input.shape) > 2:
             print(f'knn_input has too many dimensions {knn_input.shape}')
             knn_input = knn_input[:, :, 0]
@@ -114,42 +94,14 @@ class MovieRecommender:
         new_rating_df = pd.DataFrame(
             0, columns=self.mrm_df.columns, index=[user_id])
         new_rating_df[movie_id] = rating
-        self.user_data = new_rating_df
+        if type(self.user_data) != type('s'):
+            self.user_data = pd.concat([self.user_data, new_rating_df])
+        else:
+            self.user_data = new_rating_df
         print(self.user_data.head())
         self.mrm_df = pd.concat([self.mrm_df, new_rating_df])
         self.mrm_df.fillna(0, inplace=True)
         print(self.mrm_df.shape)
-
-    def add_movie_rating(self, movie_id, user_id, rating):
-        # Create a new dataframe with the new rating information
-        new_rating_df = pd.DataFrame({'user_id': [np.int32(user_id)],
-                                      'movie_id': [np.int32(movie_id)],
-                                      'rating': [np.int32(rating)],
-                                      'timestamp': [np.float64(0)]})
-        new_rating_df.set_index('movie_id', inplace=True)
-        if self.ratings_df.loc[(self.ratings_df.index == movie_id) & (self.ratings_df.user_id == user_id)].values.any():
-            print(
-                f'ENDING add_movie_rating() to prevent {movie_id} review added twice for {user_id}')
-            return
-
-        # concatenate the new rating to ratings_df
-        self.ratings_df = pd.concat(
-            [self.ratings_df, new_rating_df], ignore_index=False)
-
-        # TODO this metadata should be taken out or used
-        # recalculate the metadata for the movies
-        self.grouped_df = self.movies_df.join(self.ratings_df, on='movie_id').groupby(
-            'name').agg({'rating': ['mean', 'count']})
-        self.grouped_df['AvgRating'] = self.grouped_df[('rating', 'mean')]
-        self.grouped_df['Count'] = self.grouped_df[('rating', 'count')]
-
-        # update aggregations
-        rating_count_mean = self.grouped_df.agg({('rating', 'count'): 'mean'})
-        rating_count_std = self.grouped_df.std()[('rating', 'count')]
-        two_zscore = rating_count_mean + (2*rating_count_std)
-        # refilter based on new zscore
-        self.top_rated_movies = self.grouped_df[self.grouped_df['Count'] > float(
-            two_zscore)]
 
     # returns an array of the movie_id for all movies user has rated
     def get_user_movies(self, user_id: int):
@@ -261,9 +213,14 @@ class MovieRecommender:
         new_rating_matrix = weightage_list*mov_rtngs_sim_users
         mean_rating_list = new_rating_matrix.sum(axis=0)
         # print(mean_rating_list)
-        n = min(len(mean_rating_list), 3)
+        n = min(len(mean_rating_list), 7)
         results = list(movie_list[np.argsort(mean_rating_list)[::-1][:n]])
-        for m in results:
+        seen_movies = self.get_user_movies(user_id=user_id)
+        for m in results[1:]:
+            if m in seen_movies:
+                print(f'ignoring movie already seen ({self.get_movie_title(m)})')
+                n += 1
+                continue
             print(self.get_movie_title(m))
 
     def get_movie_rating_count_percentile(self, movie_id: int):
