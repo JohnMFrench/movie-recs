@@ -12,7 +12,6 @@ interface Props {
 const ButtonContainer = ({ movie, onThumbsDownClick, onThumbsUpClick, onNotSeenClick }: Props) => {
   return (
     <div className={styles.button_container}>
-      <div className="lightbulb">Lightbulb</div>
       <div className={styles.button} onClick={(event) => onThumbsDownClick(event, movie.movie_id)} title='Dislike'>
         &#128078;
       </div>

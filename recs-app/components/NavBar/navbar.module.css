@@ -31,11 +31,4 @@
   letter-spacing: 0.05em;
   color: black;
   text-shadow: 0 0 1rem #fff, 0 0 2rem #fff, 0 0 4rem red, 0 0 6rem red, 0 0 8rem red;
-
-  /* example of a linear gradient that could be applied */
-  /* background: linear-gradient(to right, #ff9966, #ff5e62);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.1em; */
 }

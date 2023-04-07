@@ -33,19 +33,6 @@ function MovieContainer(props: MovieContainerProps) {
     imgElement.style.display = "none";
   };
 
-  // TODO genre should come with the metadata
-  // useEffect(() => {
-  //   const genreDataService = new GenreDataService();
-  //   genreDataService
-  //     .getGenres(Number.parseInt(props.movie.movie_id))
-  //     .then((response) => {
-  //       setGenres(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
-
   return (
     <div
       key={props.movie.movie_id}
@@ -73,7 +60,7 @@ function MovieContainer(props: MovieContainerProps) {
             </em>
           </h2>
           <p>{'📝'+props.movie.count}</p>
-          <p>{'📝'+props.movie.avgRating}</p>
+          {/* <p>{'📝'+props.movie.avgRating}</p> */}
           <ButtonContainer
             movie={props.movie}
             onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) =>
