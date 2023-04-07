@@ -21,6 +21,19 @@ interface MovieContainerProps {
   toggleMovieVisibility(movie_id: string): void;
 }
 
+function formatNumber(number: number): string {
+  if (number < 10000) {
+    // For numbers less than 10,000, use the toLocaleString method
+    // to display the number with commas as thousands separators.
+    return number.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 2 } );
+  } else {
+    // For numbers greater than or equal to 10,000, divide the number
+    // by 1,000 and append the "k" suffix to the result.
+    const thousands = (number / 1000);
+    return thousands.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 } ) + "k";
+  }
+}
+
 function MovieContainer(props: MovieContainerProps) {
   let s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
   const [genres, setGenres] = useState<string>();
@@ -59,7 +72,7 @@ function MovieContainer(props: MovieContainerProps) {
               {genres && genres.replace(/\|/g, ' | ')}
             </em>
           </h2>
-          <p>{'📝'+props.movie.count}</p>
+          <p>{'📝'+formatNumber(props.movie.count)}</p>
           {/* <p>{'📝'+props.movie.avgRating}</p> */}
           <ButtonContainer
             movie={props.movie}
