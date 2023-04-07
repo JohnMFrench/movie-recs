@@ -45,7 +45,11 @@ def make_poster_for_movie(movie:str, genres:str, movie_id: str)->None:
                     "weight": 1
                 },
                 {
-                    "text": "movie poster",
+                    "text": "billboard poster ad",
+                    "weight": 2
+                },
+                {
+                    "text": "movie",
                     "weight": 2
                 },
                 ]})
