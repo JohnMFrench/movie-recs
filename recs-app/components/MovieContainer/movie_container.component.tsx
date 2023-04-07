@@ -67,7 +67,7 @@ function MovieContainer(props: MovieContainerProps) {
               {genres && genres.replace(/\|/g, ' | ')}
             </em>
           </h2>
-          <p>{'📝' + formatNumber(props.movie.count)}</p>
+          <p className={styles.movieCount}>{'📝' + formatNumber(props.movie.count)}</p>
           {/* <p>{'📝'+props.movie.avgRating}</p> */}
           <ButtonContainer
             movie={props.movie}
