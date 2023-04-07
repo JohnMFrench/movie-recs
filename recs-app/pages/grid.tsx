@@ -157,29 +157,8 @@ const Grid = () => {
         console.log(userPrefs.liked_movies);
     }, [userPrefs]);
 
-    //try to use useEffect to change how the recommendation button is displayed
-    useEffect(() => {
-        console.log('grid received new mostSimilarUserID');
-        if (mostSimilarUserID) {
-            setToastRecButtonVisible(true);
-            setModalVisible(true);
-        }
-    }, [mostSimilarUserID]);
-
     // all async behavior needs to be declared in the useEffect block
     useEffect(() => {
-        //fetch user_id from api endpoint
-        const fetchNextUserID = async () => {
-            const response = await fetch("http://127.0.0.1:5000/api/user");
-            if (!response) {
-                throw new Error("network error when trying to get user id");
-            }
-            const next_id = await response.text()
-            if (typeof next_id == typeof "s") {
-                setNextUserID(next_id);
-            }
-        }
-
         // Fetch data from a JSON file containing top rated movies.
         const fetchMovies = async () => {
             const response = await fetch("/top_rated_movies500.json");
@@ -190,11 +169,22 @@ const Grid = () => {
             const updatedMovieArray = movieArray.map((movie: any, index) => ({
                 movie_id: Object.keys(data)[index],
                 name: movie.title,
-                rating: movie.Rating,
+                avgRating: movie.AvgRating,
                 count: movie.Count,
                 visible: true,
                 closing: false,
             }));
+
+            // sort the array in descending order of Count
+            updatedMovieArray.sort((a:Movie, b:Movie) => b.count - a.count);
+
+            // Get the maximum movie rating
+            const maxRating:number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
+            const minRating:number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
+            console.log('max');
+            console.log(maxRating);
+            console.log('min');
+            console.log(minRating);
 
             // Update the state of `movies` with the array of movies.
             setMovies(updatedMovieArray);
@@ -206,21 +196,17 @@ const Grid = () => {
 
         const ds = new RecommendationDataService();
         // Call the `fextNextUserID` function when the component mounts.
-        if (!nextUserID) {
-            fetchNextUserID();
-        } else {
-            if (userPrefs.liked_movies && !mostSimilarUserID && !isRecRequested) {
-                setIsRecRequested(true);
-                ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
-                    .then((data: any) => {
-                        console.log('FOUND SIMILAR USER');
-                        console.log(data.user);
-                        setMostSimilarUseID(data.user);
-                    })
-                    .catch((e: any) => {
-                        console.log('caught error:' + e);
-                    })
-            }
+        if (userPrefs.liked_movies && !mostSimilarUserID && !isRecRequested) {
+            setIsRecRequested(true);
+            ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
+                .then((data: any) => {
+                    console.log('FOUND SIMILAR USER');
+                    console.log(data.user);
+                    setMostSimilarUseID(data.user);
+                })
+                .catch((e: any) => {
+                    console.log('caught error:' + e);
+                })
         }
     }, [toastRecButtonVisible]);
 

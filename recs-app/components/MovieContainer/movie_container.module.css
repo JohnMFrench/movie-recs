@@ -20,10 +20,11 @@
   }
 }
 
-.movieContainer:active,
+/* .movieContainer:active,
 .movieContainer:hover {
   z-index: 2;
-}
+} */
+
 .imageContainer:hover .overlay,
 .imageContainer:active .overlay {
   display: flex;

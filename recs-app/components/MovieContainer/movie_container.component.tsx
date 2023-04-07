@@ -55,7 +55,7 @@ function MovieContainer(props: MovieContainerProps) {
       onAnimationEnd={() => props.toggleMovieVisibility(props.movie.movie_id)}
     >
       <div className={styles.imageContainer}>
-        {/* <Image
+         <Image
           src={
             s3BucketBaseURL +
             props.movie.movie_id + 
@@ -64,7 +64,7 @@ function MovieContainer(props: MovieContainerProps) {
           className={styles.movieImage}
           fill={true}
           alt={"Movie poster for " + props.movie.name}
-        /> */}
+        /> 
         <div className={styles.overlay}>
           <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
           <h2 className={styles.movieContainerGenres}>
@@ -72,6 +72,8 @@ function MovieContainer(props: MovieContainerProps) {
               {genres && genres.replace(/\|/g, ' | ')}
             </em>
           </h2>
+          <p>{'📝'+props.movie.count}</p>
+          <p>{'📝'+props.movie.avgRating}</p>
           <ButtonContainer
             movie={props.movie}
             onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) =>

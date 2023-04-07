@@ -1,7 +1,7 @@
 export default interface Movie {
     movie_id: string;
     name: string;
-    rating: number;
+    avgRating: number;
     count: number;
     visible: boolean;
     closing: boolean;

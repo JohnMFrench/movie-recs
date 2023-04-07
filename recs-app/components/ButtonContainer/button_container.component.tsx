@@ -1,15 +1,9 @@
 import React from 'react';
 import styles from "./button_container.module.css";
+import Movie from '../MovieContainer/movie.type';
 
 interface Props {
-  movie: {
-    movie_id: string;
-    name: string;
-    rating: number;
-    count: number;
-    visible: boolean;
-    closing: boolean;
-  };
+  movie: Movie;
   onThumbsDownClick: (event: React.MouseEvent<HTMLDivElement>, movie_id: string) => void;
   onThumbsUpClick: (event: React.MouseEvent<HTMLDivElement>, movie_id: string) => void;
   onNotSeenClick: (event: React.MouseEvent<HTMLDivElement>, movie_id: string) => void;
@@ -18,6 +12,7 @@ interface Props {
 const ButtonContainer = ({ movie, onThumbsDownClick, onThumbsUpClick, onNotSeenClick }: Props) => {
   return (
     <div className={styles.button_container}>
+      <div className="lightbulb">Lightbulb</div>
       <div className={styles.button} onClick={(event) => onThumbsDownClick(event, movie.movie_id)} title='Dislike'>
         &#128078;
       </div>
