@@ -21,17 +21,12 @@ interface MovieContainerProps {
   toggleMovieVisibility(movie_id: string): void;
 }
 
+// return a number formatted to tenths place and expressed in thousands with "k"
 function formatNumber(number: number): string {
-  if (number < 10000) {
-    // For numbers less than 10,000, use the toLocaleString method
-    // to display the number with commas as thousands separators.
-    return number.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 2 } );
-  } else {
-    // For numbers greater than or equal to 10,000, divide the number
-    // by 1,000 and append the "k" suffix to the result.
-    const thousands = (number / 1000);
-    return thousands.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 } ) + "k";
-  }
+  const range = {minimumFractionDigits: 1, maximumFractionDigits: 1}
+  const result = (number < 10000) ? number.toLocaleString('en-US', range)
+    : (number / 1000).toLocaleString('en-US', range) + "k";
+  return result;
 }
 
 function MovieContainer(props: MovieContainerProps) {
@@ -55,16 +50,16 @@ function MovieContainer(props: MovieContainerProps) {
       onAnimationEnd={() => props.toggleMovieVisibility(props.movie.movie_id)}
     >
       <div className={styles.imageContainer}>
-         <Image
+        <Image
           src={
             s3BucketBaseURL +
-            props.movie.movie_id + 
+            props.movie.movie_id +
             ".png"
           }
           className={styles.movieImage}
           fill={true}
           alt={"Movie poster for " + props.movie.name}
-        /> 
+        />
         <div className={styles.overlay}>
           <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
           <h2 className={styles.movieContainerGenres}>
@@ -72,7 +67,7 @@ function MovieContainer(props: MovieContainerProps) {
               {genres && genres.replace(/\|/g, ' | ')}
             </em>
           </h2>
-          <p>{'📝'+formatNumber(props.movie.count)}</p>
+          <p>{'📝' + formatNumber(props.movie.count)}</p>
           {/* <p>{'📝'+props.movie.avgRating}</p> */}
           <ButtonContainer
             movie={props.movie}
