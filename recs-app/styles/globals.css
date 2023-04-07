@@ -96,11 +96,11 @@ a {
 .app-container {
   width: 100%;
   height: 100%;
-  /* background-color: rgb(27, 27, 27); */
   background-color: #4D4043;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  padding-top: 8vh;
 }
 @media only screen and (max-width: 767px) {
   .app-container {

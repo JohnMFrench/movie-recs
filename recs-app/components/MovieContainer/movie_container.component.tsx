@@ -54,7 +54,7 @@ function MovieContainer(props: MovieContainerProps) {
           src={
             s3BucketBaseURL +
             props.movie.movie_id +
-            ".png"
+            ".jpg"
           }
           className={styles.movieImage}
           fill={true}

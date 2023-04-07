@@ -24,3 +24,10 @@ api_env
 
 # archived scripts no longer used
 tests/scripts/*.py
+
+# api secrets
+*secret*
+
+# artifacts of making posters
+*.jpg
+*.json
