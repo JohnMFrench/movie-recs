@@ -18,8 +18,8 @@
 
 .modalContent {
   position: relative;
-  max-width: 800px;
-  max-height: 80vh;
+  max-width: 95%;
+  max-height: 95%;
   overflow: auto;
   text-align: center;
   border-radius: 4px;
@@ -28,21 +28,22 @@
   background-color: black;
   border: 0.25rem solid #6b2032;
   border-radius: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
 }
 
 @media only screen and (max-width: 767px) {
   .modalContent {
-    max-width: 80vw;
-    width: 80vw;
-    max-height: 95vh;
-    height: 95vh;
+    width: auto;
+    height: auto;
+  }
+  .modalContent img {
+    max-width: 256px;
+    max-height: 256px;
   }
 }
 
-.modalContent img {
-  min-height: 6rem;
-  min-width: 2rem;
-}
 
 @media only screen and (max-width: 767px) {
   .modalContent img {

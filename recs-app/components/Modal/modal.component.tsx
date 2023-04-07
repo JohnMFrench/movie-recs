@@ -16,17 +16,19 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
     return (
         <div className={modalClassName} onClick={onClose}>
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
-                <ul>
-                    <li>userID={userID}</li>
-                    <li>comparingUserID={comparingUserID}</li>
-                </ul>
+                {comparingUserID &&
+                    <ul>
+                        <li>userID={userID}</li>
+                        <li>comparingUserID={comparingUserID}</li>
+                    </ul>
+                }
                 {comparingUserID && userID &&
                     <img src={'http://localhost:5000/api/compare/' + userID + '/' + comparingUserID} alt="" />
                 }
                 {movie &&
                     <>
                         <h2 className={styles.movieTitle}>{movie.name}</h2>
-                        {/* <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" /> */}
+                        <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                         {/* <ButtonContainer movie={movie}
                             onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {
                                 throw new Error('Function not implemented.');
