@@ -168,12 +168,13 @@ const Grid = () => {
             // Create an array of movies from the fetched data.
             const movieArray: unknown[] = Object.values(data);
             const updatedMovieArray = movieArray.map((movie: any, index) => ({
-                movie_id: Object.keys(data)[index],
+                // movie_id: Object.keys(data)[index],
+                movie_id: movie.movie_id,
                 name: movie.name,
                 substituted_name: movie.substituted_name,
                 substituted_desc: movie.description,
-                avgRating: movie.rating,
-                count: movie.rating,
+                avgRating: movie.avg_rating,
+                count: movie.num_ratings,
                 visible: true,
                 closing: false,
             }));

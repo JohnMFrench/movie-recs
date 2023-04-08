@@ -6,19 +6,19 @@ import base64
 
 def save_images(response, directory, entity_name):
     res_content = dict(json.loads(response.content))
-    res_img = res_content.keys()
-    print(res_img)
-    res_img = res_content['artifacts'][0]
-    img_data = base64.b64decode(res_img['base64'])
-    seed = res_img['seed']
-    print(seed)
-    with open(f"{entity_name}.jpg", "wb") as f:
-        f.write(img_data)
+    # print(res_img)
+    for idx, img in enumerate(res_content['artifacts']):
+        img_data = base64.b64decode(img['base64'])
+        seed = img['seed']
+        print(seed)
+        with open(f"{entity_name}_{idx}.jpg", "wb") as f:
+            f.write(img_data)
 
 
-def make_poster_for_movie(movie:str, genres:str, movie_id: str)->None:
+def make_poster_for_movie(movie: str, genres: str, movie_id: str) -> None:
     # try to load the api key from file
-    secrets_filename = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'secret.txt')
+    secrets_filename = os.path.join(os.path.abspath(
+        os.path.dirname(__file__)), 'secret.txt')
     try:
         with open(secrets_filename, 'r') as f:
             api_key = f.read().strip()
@@ -42,48 +42,48 @@ def make_poster_for_movie(movie:str, genres:str, movie_id: str)->None:
                     "text": movie,
                     "weight": 6
                 },
-                # {
-                #     "text": "advertisement",
-                #     "weight": 1
-                # },
-                # {
-                #     "text": "artistic",
-                #     "weight": 1
-                # },
-                # {
-                #     "text": "title text centered",
-                #     "weight": 1
-                # },
-                # {
-                #     "text": clean_title,
-                #     "weight": 5
-                # },
-                # {
-                #     "text": "characters facing forward",
-                #     "weight": 3
-                # },
-                # {
-                #     "text": genres,
-                #     "weight": 1
-                # },
-                # {
-                #     "text": "billboard poster ad",
-                #     "weight": 2
-                # },
-                # {
-                #     "text": "movie",
-                #     "weight": 2
-                # },
-                ]})
+            ], "samples": 4, "steps": 100})
             print(response)
 
             if response.status_code == 200:
-                save_images(response, 'generated_images',movie_id)
+                save_images(response, 'generated_images', movie_id)
                 print('Images saved successfully')
             else:
                 print(response.status_code, response.text)
 
-
     except Exception as e:
         print(f'Exception while reading {secrets_filename}')
         print(e)
+
+        # {
+        #     "text": "advertisement",
+        #     "weight": 1
+        # },
+        # {
+        #     "text": "artistic",
+        #     "weight": 1
+        # },
+        # {
+        #     "text": "title text centered",
+        #     "weight": 1
+        # },
+        # {
+        #     "text": clean_title,
+        #     "weight": 5
+        # },
+        # {
+        #     "text": "characters facing forward",
+        #     "weight": 3
+        # },
+        # {
+        #     "text": genres,
+        #     "weight": 1
+        # },
+        # {
+        #     "text": "billboard poster ad",
+        #     "weight": 2
+        # },
+        # {
+        #     "text": "movie",
+        #     "weight": 2
+        # },
