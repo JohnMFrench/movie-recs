@@ -71,7 +71,7 @@ function MovieContainer(props: MovieContainerProps) {
           alt={"Movie poster for " + props.movie.name}
         /> */}
         <div className={styles.overlay}>
-          <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
+          <h2 className={styles.movieContainerTitle}>{props.movie.substituted_name ? props.movie.substituted_name : props.movie.name}</h2>
           <h2 className={styles.movieContainerGenres}>
             <em>
               {genres && genres.replace(/\|/g, ' | ')}

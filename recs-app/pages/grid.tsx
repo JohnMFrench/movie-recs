@@ -161,16 +161,17 @@ const Grid = () => {
     useEffect(() => {
         // Fetch data from a JSON file containing top rated movies.
         const fetchMovies = async () => {
-            const response = await fetch("/top_rated_movies500.json");
+            const response = await fetch("/top_rated_1000.json");
             const data = await response.json();
 
             // Create an array of movies from the fetched data.
             const movieArray: unknown[] = Object.values(data);
             const updatedMovieArray = movieArray.map((movie: any, index) => ({
                 movie_id: Object.keys(data)[index],
-                name: movie.title,
-                avgRating: movie.AvgRating,
-                count: movie.Count,
+                name: movie.name,
+                substituted_name: movie.substituted_name,
+                avgRating: movie.rating,
+                count: movie.rating,
                 visible: true,
                 closing: false,
             }));
@@ -179,12 +180,12 @@ const Grid = () => {
             updatedMovieArray.sort((a:Movie, b:Movie) => b.count - a.count);
 
             // Get the maximum movie rating
-            const maxRating:number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
-            const minRating:number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
-            console.log('max');
-            console.log(maxRating);
-            console.log('min');
-            console.log(minRating);
+            // const maxRating:number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
+            // const minRating:number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
+            // console.log('max');
+            // console.log(maxRating);
+            // console.log('min');
+            // console.log(minRating);
 
             // Update the state of `movies` with the array of movies.
             setMovies(updatedMovieArray);
