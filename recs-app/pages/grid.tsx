@@ -159,9 +159,10 @@ const Grid = () => {
 
     // all async behavior needs to be declared in the useEffect block
     useEffect(() => {
+        const s3_metadata_url: string = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/top_rated_1000.json";
         // Fetch data from a JSON file containing top rated movies.
         const fetchMovies = async () => {
-            const response = await fetch("/top_rated_1000.json");
+            const response = await fetch(s3_metadata_url);
             const data = await response.json();
 
             // Create an array of movies from the fetched data.
