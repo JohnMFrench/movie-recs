@@ -17,6 +17,8 @@
 }
 
 .modalContent {
+  display: flex;
+  flex-direction: row;
   position: relative;
   max-width: 95%;
   max-height: 95%;
@@ -41,9 +43,18 @@
   .modalContent img {
     max-width: 256px;
     max-height: 256px;
+    float: left;
+  }
+  .modalContent {
+    flex-direction: column !important;
+  }
+  .modalContentContainer * {
+    padding: 0.5rem;
+  }
+  .modalContentContainer {
+    padding: 0.2rem !important;
   }
 }
-
 
 @media only screen and (max-width: 767px) {
   .modalContent img {
@@ -54,4 +65,11 @@
 .movieTitle {
   font-size: clamp(16px, 18px, 3rem);
   padding: 0.75rem;
+}
+
+.modalContentContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 1rem;
 }
