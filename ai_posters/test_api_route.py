@@ -42,22 +42,26 @@ def make_poster_for_movie(movie:str, genres:str, movie_id: str)->None:
                     "text": movie,
                     "weight": 6
                 },
-                {
-                    "text": "advertisement",
-                    "weight": 1
-                },
-                {
-                    "text": "artistic",
-                    "weight": 1
-                },
-                {
-                    "text": "title text centered",
-                    "weight": 1
-                },
-                {
-                    "text": clean_title,
-                    "weight": 5
-                },
+                # {
+                #     "text": "advertisement",
+                #     "weight": 1
+                # },
+                # {
+                #     "text": "artistic",
+                #     "weight": 1
+                # },
+                # {
+                #     "text": "title text centered",
+                #     "weight": 1
+                # },
+                # {
+                #     "text": clean_title,
+                #     "weight": 5
+                # },
+                # {
+                #     "text": "characters facing forward",
+                #     "weight": 3
+                # },
                 # {
                 #     "text": genres,
                 #     "weight": 1

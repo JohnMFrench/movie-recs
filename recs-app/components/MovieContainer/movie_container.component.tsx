@@ -23,8 +23,8 @@ interface MovieContainerProps {
 
 // return a number formatted to tenths place and expressed in thousands with "k"
 function formatNumber(number: number): string {
-  const range = {minimumFractionDigits: 1, maximumFractionDigits: 1}
-  const result = (number < 10000) ? number.toLocaleString('en-US', range)
+  const range = { minimumFractionDigits: 1, maximumFractionDigits: 1 }
+  const result = (number < 10000) ? number.toLocaleString('en-US', { maximumFractionDigits: 0 })
     : (number / 1000).toLocaleString('en-US', range) + "k";
   return result;
 }
@@ -58,7 +58,7 @@ function MovieContainer(props: MovieContainerProps) {
           }
           className={styles.movieImage}
           alt={"Movie poster for " + props.movie.name}
-          />
+        />
         {/* took this out to load images without cdn */}
         {/* <Image
           src={
