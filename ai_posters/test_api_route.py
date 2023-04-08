@@ -35,23 +35,41 @@ def make_poster_for_movie(movie:str, genres:str, movie_id: str)->None:
             # for engine in data:
             #     print(engine)
 
+            clean_title = movie[:-6].strip()
+
             response = requests.post(generation_url, headers=headers, json={"width": 512, "height": 512, "text_prompts": [
                 {
                     "text": movie,
+                    "weight": 6
+                },
+                {
+                    "text": "advertisement",
                     "weight": 1
                 },
                 {
-                    "text": genres,
+                    "text": "artistic",
                     "weight": 1
                 },
                 {
-                    "text": "billboard poster ad",
-                    "weight": 2
+                    "text": "title text centered",
+                    "weight": 1
                 },
                 {
-                    "text": "movie",
-                    "weight": 2
+                    "text": clean_title,
+                    "weight": 5
                 },
+                # {
+                #     "text": genres,
+                #     "weight": 1
+                # },
+                # {
+                #     "text": "billboard poster ad",
+                #     "weight": 2
+                # },
+                # {
+                #     "text": "movie",
+                #     "weight": 2
+                # },
                 ]})
             print(response)
 
