@@ -171,6 +171,7 @@ const Grid = () => {
                 movie_id: Object.keys(data)[index],
                 name: movie.name,
                 substituted_name: movie.substituted_name,
+                substituted_desc: movie.description,
                 avgRating: movie.rating,
                 count: movie.rating,
                 visible: true,

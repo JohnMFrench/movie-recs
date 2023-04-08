@@ -29,6 +29,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                     <>
                         <h2 className={styles.movieTitle}>{movie.name}</h2>
                         <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
+                        <p>{movie.substituted_desc}</p>
                         {/* <ButtonContainer movie={movie}
                             onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {
                                 throw new Error('Function not implemented.');
