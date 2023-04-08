@@ -6,7 +6,9 @@ __pycache__
 
 # unused source data
 recs-app/public/*50.json
+recs-app/public/*500*.json
 recs-app/public/*250.json
+# recs-app/public/1000.json
 recs-app/public/*archive.json
 
 # images
@@ -31,3 +33,4 @@ tests/scripts/*.py
 # artifacts of making posters
 *.jpg
 *.json
+
