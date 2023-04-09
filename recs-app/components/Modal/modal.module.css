@@ -56,6 +56,22 @@
   }
 }
 
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 2rem;
+  font-size: 2rem;
+  color: white;
+  outline: none;
+}
+.closeButton:hover {
+  transform: scale(1.2);
+}
+
 @media only screen and (max-width: 767px) {
   .modalContent img {
     padding-top: 2rem;

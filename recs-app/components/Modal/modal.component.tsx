@@ -12,8 +12,8 @@ type ModalProps = {
 
 // return a number formatted to tenths place and expressed in thousands with "k"
 function formatNumber(number: number): string {
-  const range = { minimumFractionDigits: 1, maximumFractionDigits: 1 }
-  return number.toLocaleString('en-US', range)
+    const range = { minimumFractionDigits: 1, maximumFractionDigits: 1 }
+    return number.toLocaleString('en-US', range)
 }
 
 
@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
     const emojis = ["💔", "🤎", "💛", "❤️", "❤️‍🔥"];
     let ratingEmoji = ''
     if (movie) {
-        const emoji_idx =Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)
+        const emoji_idx = Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)
         console.log('emoji_id');
         console.log(emoji_idx);
         ratingEmoji = emojis[Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)]
@@ -52,10 +52,11 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                             <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1>
                             <em>An AI interpretation of {movie.name}</em>
                             <p>
-                                {ratingEmoji+formatNumber(movie.avgRating)}
+                                {ratingEmoji + formatNumber(movie.avgRating)}
                                 {movie.substituted_desc && movie.substituted_desc}
                             </p>
                         </div>
+                        <div className={styles.closeButton} onClick={onClose}><p>❌</p></div>
                     </>
                 }
             </div>
