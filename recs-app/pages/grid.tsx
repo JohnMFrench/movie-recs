@@ -173,6 +173,7 @@ const Grid = () => {
                 name: movie.name,
                 substituted_name: movie.substituted_name,
                 substituted_desc: movie.description,
+                rating: movie.rating,
                 avgRating: movie.avg_rating,
                 count: movie.num_ratings,
                 visible: true,
@@ -183,12 +184,12 @@ const Grid = () => {
             updatedMovieArray.sort((a:Movie, b:Movie) => b.count - a.count);
 
             // Get the maximum movie rating
-            // const maxRating:number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
-            // const minRating:number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
-            // console.log('max');
-            // console.log(maxRating);
-            // console.log('min');
-            // console.log(minRating);
+            const maxRating:number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
+            const minRating:number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
+            console.log('max');
+            console.log(maxRating);
+            console.log('min');
+            console.log(minRating);
 
             // Update the state of `movies` with the array of movies.
             setMovies(updatedMovieArray);

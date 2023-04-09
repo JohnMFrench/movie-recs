@@ -10,8 +10,27 @@ type ModalProps = {
     onClose: () => void;
 };
 
+// return a number formatted to tenths place and expressed in thousands with "k"
+function formatNumber(number: number): string {
+  const range = { minimumFractionDigits: 1, maximumFractionDigits: 1 }
+  return number.toLocaleString('en-US', range)
+}
+
+
 const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, onClose }) => {
     const modalClassName = visible ? styles.modalVisible : styles.modalHidden;
+    const maxRating: number = 4.5;
+    const minRating: number = 3;
+    const emojis = ["💔", "🤎", "💛", "❤️", "❤️‍🔥"];
+    let ratingEmoji = ''
+    if (movie) {
+        const emoji_idx =Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)
+        console.log('emoji_id');
+        console.log(emoji_idx);
+        ratingEmoji = emojis[Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)]
+    }
+    console.log("movie emoji")
+    console.log(ratingEmoji);
 
     return (
         <div className={modalClassName} onClick={onClose}>
@@ -31,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                         <div className={styles.modalContentContainer}>
                             <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1>
                             <em>An AI interpretation of {movie.name}</em>
-                            <p>{movie.substituted_desc}</p>
+                            <p>{ratingEmoji+formatNumber(movie.avgRating)}{movie.substituted_desc && movie.substituted_desc}</p>
                         </div>
                         {/* <ButtonContainer movie={movie}
                             onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {
