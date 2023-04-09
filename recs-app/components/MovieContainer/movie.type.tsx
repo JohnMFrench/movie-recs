@@ -5,6 +5,7 @@ export default interface Movie {
     substituted_desc: string;
     avgRating: number;
     rating: number;
+    ranking: number;
     count: number;
     visible: boolean;
     closing: boolean;

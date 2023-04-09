@@ -174,6 +174,7 @@ const Grid = () => {
                 substituted_name: movie.substituted_name,
                 substituted_desc: movie.description,
                 rating: movie.rating,
+                ranking: movie.ranking,
                 avgRating: movie.avg_rating,
                 count: movie.num_ratings,
                 visible: true,

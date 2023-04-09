@@ -33,7 +33,7 @@ function MovieContainer(props: MovieContainerProps) {
   let s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
   const [genres, setGenres] = useState<string>();
   if (process.env.NODE_ENV === 'development') {
-    s3BucketBaseURL = '/';
+    // s3BucketBaseURL = '/';
   }
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {

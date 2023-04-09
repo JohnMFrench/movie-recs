@@ -48,18 +48,14 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                     <>
                         <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                         <div className={styles.modalContentContainer}>
+                            <strong>{movie.ranking}</strong>
                             <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1>
                             <em>An AI interpretation of {movie.name}</em>
-                            <p>{ratingEmoji+formatNumber(movie.avgRating)}{movie.substituted_desc && movie.substituted_desc}</p>
+                            <p>
+                                {ratingEmoji+formatNumber(movie.avgRating)}
+                                {movie.substituted_desc && movie.substituted_desc}
+                            </p>
                         </div>
-                        {/* <ButtonContainer movie={movie}
-                            onThumbsDownClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {
-                                throw new Error('Function not implemented.');
-                            }} onThumbsUpClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {
-                                throw new Error('Function not implemented.');
-                            }} onNotSeenClick={function (event: React.MouseEvent<HTMLDivElement, MouseEvent>, movie_id: string): void {
-                                throw new Error('Function not implemented.');
-                            }} /> */}
                     </>
                 }
             </div>
