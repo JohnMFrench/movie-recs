@@ -43,8 +43,7 @@ def make_poster_for_movie(movie: str, genres: str, movie_id: str) -> None:
                     "weight": 6
                 },
             ], 
-                "samples": 1, 
-                "steps": 50})
+                "samples": 1})
             print(response)
 
             if response.status_code == 200:
