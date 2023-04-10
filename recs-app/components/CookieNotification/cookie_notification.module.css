@@ -38,6 +38,7 @@
 
 .cookiePolicyContent {
   background-color: #fff; /* Set the background color of the modal content */
+  color: black;
   border-radius: 5px; /* Add rounded corners to the modal content */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a drop shadow to the modal content */
   max-width: 500px; /* Set the maximum width of the modal content */
@@ -49,6 +50,14 @@
     -50%
   ); /* Center the modal content by translating it 50% from the top and left edges of the viewport */
   padding: 20px; /* Add some padding to the modal content */
+}
+@media only screen and (max-width: 767px) {
+    .cookiePolicyContent {
+        min-width: 80vw;
+        max-height: 90vh;
+        font-size: 0.7rem;
+        padding: 10px;
+    }
 }
 
 /* Accept Cookies Button */
@@ -76,4 +85,10 @@
   margin-top: 1rem;
   margin-left: 1rem;
   font-size: 1rem;
+}
+
+.policyButtonContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
