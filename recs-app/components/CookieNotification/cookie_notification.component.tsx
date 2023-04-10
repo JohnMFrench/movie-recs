@@ -9,6 +9,7 @@ type CookieNotificationProps = {
 
 const CookieNotification: React.FC<CookieNotificationProps> = ({ accepted }) => {
     const [consentedToCookies, setConsentedToCookies] = useState<boolean>(accepted);
+    const [isPolicyOpen, setIsPolicyOpen] = useState(true);
 
     // Load the user's cookie consent preference from localStorage on page load
     useEffect(() => {
@@ -18,6 +19,7 @@ const CookieNotification: React.FC<CookieNotificationProps> = ({ accepted }) => 
         if (localStorageConsent) {
             setConsentedToCookies(JSON.parse(localStorageConsent));
         }
+        setIsPolicyOpen(true);
     }, []);
 
     // Update localStorage with the user's cookie consent preference whenever it changes
@@ -29,9 +31,20 @@ const CookieNotification: React.FC<CookieNotificationProps> = ({ accepted }) => 
 
     return (
         <span className={styles.cookieNotification + ((consentedToCookies) ? "Hidden" : "")}>
-                {!consentedToCookies &&
-                    <p className={styles.cookieNotificationText} onClick={() => {setConsentedToCookies(true)}}>View Data Policy</p>
-                }
+            {consentedToCookies &&
+                <>
+                    <p className={styles.cookieNotificationText} onClick={() => { setConsentedToCookies(true) }}>View Data Policy</p>
+                    <div className={styles.cookiePolicyContainer + ((isPolicyOpen) ? "" : "Hidden")} onClick={() => {
+                        setIsPolicyOpen(false);
+                    }}>
+                        {isPolicyOpen &&
+                            <p className={styles.cookiePolicyContent}>
+                                This app uses a mix of real-world and AI data.
+                            </p>
+                        }
+                    </div>
+                </>
+            }
         </span>
     );
 }

@@ -82,10 +82,3 @@
   font-size: clamp(16px, 18px, 3rem);
   padding: 0.75rem;
 }
-
-.modalContentContainer {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  padding: 1rem;
-}

@@ -1,16 +1,51 @@
 .cookieNotification {
-    min-width: 10vw;
-    z-index: 999;
-    padding: 0.25rem;
-    border: 1px solid beige;
-    background-color: beige;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
+  min-width: 10vw;
+  z-index: 999;
+  padding: 0.25rem;
+  border: 1px solid beige;
+  background-color: beige;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 }
 
 .cookieNotificationText {
-    color: black;
+  color: black;
 }
 .cookieNotificationHidden {
-    display: none;
+  display: none;
+}
+
+.cookiePolicyContainer {
+  display: inline; /* Hide the modal by default */
+  position: fixed; /* Position the modal relative to the viewport */
+  z-index: 9999; /* Set a high z-index to ensure it appears on top of other elements */
+  top: 0; /* Position the modal at the top of the viewport */
+  left: 0; /* Position the modal at the left of the viewport */
+  width: 100%; /* Set the width to fill the entire viewport */
+  height: 100%; /* Set the height to fill the entire viewport */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.4
+  ); /* Add a semi-transparent black background behind the modal */
+}
+
+.cookiePolicyContainerHidden {
+  display: none;
+}
+
+.cookiePolicyContent {
+  background-color: #fff; /* Set the background color of the modal content */
+  border-radius: 5px; /* Add rounded corners to the modal content */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a drop shadow to the modal content */
+  max-width: 500px; /* Set the maximum width of the modal content */
+  position: absolute; /* Position the modal content relative to the modal container */
+  top: 50%; /* Position the modal content at the center of the viewport vertically */
+  left: 50%; /* Position the modal content at the center of the viewport horizontally */
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Center the modal content by translating it 50% from the top and left edges of the viewport */
+  padding: 20px; /* Add some padding to the modal content */
 }
