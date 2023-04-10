@@ -7,6 +7,8 @@ import Movie from "@/components/MovieContainer/movie.type";
 import MovieContainer from "@/components/MovieContainer/movie_container.component";
 import RecContainer from "@/components/RecContainer/rec_container.component";
 import RecommendationDataService from "@/api/recommendation.api";
+import CookieNotification from "@/components/CookieNotification/cookie_notification.component";
+import { Cookie } from "next/font/google";
 
 
 type UserPrefs = {
@@ -182,11 +184,11 @@ const Grid = () => {
             }));
 
             // sort the array in descending order of Count
-            updatedMovieArray.sort((a:Movie, b:Movie) => b.count - a.count);
+            updatedMovieArray.sort((a: Movie, b: Movie) => b.count - a.count);
 
             // Get the maximum movie rating
-            const maxRating:number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
-            const minRating:number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
+            const maxRating: number = Math.max(...updatedMovieArray.map(movie => movie.avgRating));
+            const minRating: number = Math.min(...updatedMovieArray.map(movie => movie.avgRating));
             console.log('max');
             console.log(maxRating);
             console.log('min');

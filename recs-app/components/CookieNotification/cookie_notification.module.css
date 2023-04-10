@@ -1,0 +1,16 @@
+.cookieNotification {
+    min-width: 10vw;
+    z-index: 999;
+    padding: 0.25rem;
+    border: 1px solid beige;
+    background-color: beige;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.cookieNotificationText {
+    color: black;
+}
+.cookieNotificationHidden {
+    display: none;
+}

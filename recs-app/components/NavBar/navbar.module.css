@@ -1,5 +1,7 @@
 .navbar {
   position: fixed;
+  display: flex;
+  flex-direction: row;
   top: 0;
   left: 0;
   width: 100vw;
@@ -11,12 +13,13 @@
   padding: 0.25rem;
   z-index: 1;
 }
-
+nav .title {
+  margin-right: 2rem;
+}
 @media only screen and (max-width: 767px) {
   .navbar {
     width: 100%;
   }
-
 }
 
 .title {
@@ -28,5 +31,6 @@
   font-weight: 500;
   letter-spacing: 0.05em;
   color: black;
-  text-shadow: 0 0 1rem #fff, 0 0 2rem #fff, 0 0 4rem red, 0 0 6rem red, 0 0 8rem red;
+  text-shadow: 0 0 1rem #fff, 0 0 2rem #fff, 0 0 4rem red, 0 0 6rem red,
+    0 0 8rem red;
 }

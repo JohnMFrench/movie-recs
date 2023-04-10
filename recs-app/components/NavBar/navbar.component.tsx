@@ -1,4 +1,5 @@
 import { FC } from "react";
+import CookieNotification from "../CookieNotification/cookie_notification.component";
 import styles from "./navbar.module.css";
 
 interface NavbarProps {
@@ -8,9 +9,10 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ title }) => {
     return (
         <nav className={styles.navbar}>
-            <h1>
+            <h2>
                 <a className={styles.title}>{title}</a>
-            </h1>
+            </h2>
+            <CookieNotification accepted={false} />
         </nav>
     );
 };
