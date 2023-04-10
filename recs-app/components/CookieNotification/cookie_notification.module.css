@@ -10,7 +10,9 @@
 }
 
 .cookieNotificationText {
+  font-size: 1.5rem;
   color: black;
+  margin: 0px;
 }
 .cookieNotificationHidden {
   display: none;
@@ -52,12 +54,12 @@
   padding: 20px; /* Add some padding to the modal content */
 }
 @media only screen and (max-width: 767px) {
-    .cookiePolicyContent {
-        min-width: 80vw;
-        max-height: 90vh;
-        font-size: 0.7rem;
-        padding: 10px;
-    }
+  .cookiePolicyContent {
+    min-width: 80vw;
+    max-height: 90vh;
+    font-size: 0.8rem;
+    padding: 10px;
+  }
 }
 
 /* Accept Cookies Button */
@@ -88,7 +90,7 @@
 }
 
 .policyButtonContainer {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }

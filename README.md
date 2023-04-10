@@ -17,5 +17,5 @@ This is an app that will generate movie recommendations.
 - create ServerStatus component
 - add ratings and rebuild model
 - Create better dataframe for matrix calculations
-    - fold in duplicate ratings for users by averaging
     - create columns for each genre
+- fix issue where buttons can be clicked while they are not focused

@@ -33,7 +33,7 @@ const CookieNotification: React.FC<CookieNotificationProps> = ({ accepted }) => 
         <span className={styles.cookieNotification + ((consentedToCookies) ? "Hidden" : "")}>
             {!consentedToCookies &&
                 <>
-                    <p className={styles.cookieNotificationText} onClick={() => { setIsPolicyOpen(true) }}>View Data Policy</p>
+                    <p className={styles.cookieNotificationText} onClick={() => { setIsPolicyOpen(true) }}>❓</p>
                     <div className={styles.cookiePolicyContainer + ((isPolicyOpen) ? "" : "Hidden")} onClick={() => {
                         setIsPolicyOpen(!isPolicyOpen);
                     }}>

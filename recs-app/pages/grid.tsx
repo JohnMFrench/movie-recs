@@ -220,8 +220,8 @@ const Grid = () => {
 
     return (
         <>
-            <Navbar title={"MovieLens Recommendations"} />
-            <HelpBar />
+            <Navbar title={"MovieLens Recommendations"} liked_movies={userPrefs.liked_movies}/>
+            {/* <HelpBar /> */}
             <div className={"app-container"}>
                 {movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
                     <>
@@ -237,11 +237,11 @@ const Grid = () => {
                                 toggleMovieVisibility={toggleMovieVisibility}
                             />
                         )}
-                        <Toast
+                        {/* <Toast
                             message={toastMessage}
                             recButtonVisible={toastRecButtonVisible}
                             onRequestRecommendation={(e) => onRequestReviewClick(e, userPrefs)}
-                        />
+                        /> */}
                     </>
                 ))}
                 <Modal
