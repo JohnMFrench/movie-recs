@@ -6,6 +6,7 @@
   background-color: beige;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
+  cursor: pointer;
 }
 
 .cookieNotificationText {
@@ -48,4 +49,31 @@
     -50%
   ); /* Center the modal content by translating it 50% from the top and left edges of the viewport */
   padding: 20px; /* Add some padding to the modal content */
+}
+
+/* Accept Cookies Button */
+.cookieNotificationAcceptButton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #6b2032;
+  border: none;
+  border-radius: 0.25rem;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+/* Acknowledge Button */
+.cookiePolicyAcknowledgeButton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  border: 2px solid #6b2032;
+  border-radius: 0.25rem;
+  color: #6b2032;
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  font-size: 1rem;
 }
