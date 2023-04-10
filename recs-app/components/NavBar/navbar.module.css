@@ -15,11 +15,6 @@
 nav .title {
   margin-right: 2rem;
 }
-@media only screen and (max-width: 767px) {
-  .navbar {
-    width: 100%;
-  }
-}
 
 .title {
   font-weight: bold;
@@ -35,15 +30,39 @@ nav .title {
 }
 
 @media only screen and (max-width: 767px) {
+  .navbar {
+    width: 100%;
+  }
+  .title {
+    font-weight: 300;
+    font-size: clamp(0.25rem, 1rem, 1.5rem);
+  }
+}
+
+.navbarButton {
+  border-top: 0.1rem solid red;
+  border-left: 0.1rem solid red;
+  border-right: 0.1rem solid red;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  text-align: center;
+}
+
+@media only screen and (max-width: 767px) {
   .navbarButton {
-    font-size: 1.2rem;
-  margin-right: 1rem;
-  margin-top: 1rem;
+    font-size: 0.8rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border: 0.2rem solid red;
+    border-radius: 0.5rem;
   }
 }
 @media only screen and (min-width: 767px) {
   .navbarButton {
     font-size: 1.5rem;
+    margin-right: 1rem;
+    padding: 0.2rem;
   }
 }
 
@@ -52,7 +71,11 @@ nav .title {
   width: 50%;
   padding-top: 0.25rem;
 }
-.right{
+.right {
   float: right;
   width: 50%;
+}
+
+.navbarButtonRecommend {
+  cursor: pointer;
 }
