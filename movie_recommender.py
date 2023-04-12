@@ -59,49 +59,55 @@ class MovieRecommender:
 
     # copied from github
     def get_similar_users(self, user: int, n=3):
-        print('get similar users called on user ',
-              user, ' with type ', type(user))
+        # print('get similar users called on user ',
+        #       user, ' with type ', type(user))
         # input to this function is the user and number of top similar users you want.
-        print(
-            f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
-        print(f'values for {user}')
+        # print(
+        #     f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
+        # print(f'values for {user}')
         knn_input = self.user_data
              
-        print(f'knn_input with shape of {knn_input.shape}')
+        # print(f'knn_input with shape of {knn_input.shape}')
         if len(knn_input.shape) > 2:
-            print(f'knn_input has too many dimensions {knn_input.shape}')
+            # print(f'knn_input has too many dimensions {knn_input.shape}')
             knn_input = knn_input[:, :, 0]
             # knn_input = knn_input.squeeze(axis=1)
-        print(
-            f'get_similar_users called with knn_input shape of {knn_input.shape}')
+        # print(
+        #     f'get_similar_users called with knn_input shape of {knn_input.shape}')
         distances, indices = self.knn_model.kneighbors(
             knn_input, n_neighbors=n+1)
 
-        print(f"Top {n} users who are very much similar to the User- {user}are: ")
-        for i in range(1, len(distances[0])):
-            print(i, ". User:", indices[0][i]+1,
-                  "separated by distance of", distances[0][i])
+        # print(f"Top {n} users who are very much similar to the User- {user}are: ")
+        # for i in range(1, len(distances[0])):
+            # print(i, ". User:", indices[0][i]+1,
+                #   "separated by distance of", distances[0][i])
         return indices.flatten()[1:], distances.flatten()[1:]
 
     def refit_model(self):
         self.sparse_df = csr_matrix(self.mrm_df.values)
         self.knn_model = NearestNeighbors(metric='cosine', algorithm='brute')
         self.knn_model.fit(self.sparse_df)
+        
+    def flush_user_data(self):
+        self.user_data = ''
+        print(f'movie_rec\'s user_data variable reset')
 
     def new_add_movie_rating(self, movie_id: int, user_id: int, rating: int):
         print(f'started add_movie_rating with user of {user_id}')
-        print(self.mrm_df.shape)
+        # print(self.mrm_df.shape)
         new_rating_df = pd.DataFrame(
             0, columns=self.mrm_df.columns, index=[user_id])
-        new_rating_df[movie_id] = rating
+        new_rating_df.loc[user_id, movie_id] = rating
+        filtered_df = new_rating_df.loc[:, new_rating_df.loc[user_id].ne(0)]
+        print(filtered_df)
         if type(self.user_data) != type('s'):
             self.user_data = pd.concat([self.user_data, new_rating_df])
         else:
             self.user_data = new_rating_df
-        print(self.user_data.head())
+        # print(self.user_data.head())
         self.mrm_df = pd.concat([self.mrm_df, new_rating_df])
         self.mrm_df.fillna(0, inplace=True)
-        print(self.mrm_df.shape)
+        # print(self.mrm_df.shape)
 
     # returns an array of the movie_id for all movies user has rated
     def get_user_movies(self, user_id: int):
@@ -140,68 +146,8 @@ class MovieRecommender:
     def get_user_movie_rating(self, user_id: int, movie_id: int):
         return int(self.ratings_df.loc[(self.ratings_df['user_id'] == user_id) & (self.ratings_df.index == movie_id), 'rating'])
 
-    def get_user_similarity_score(self, user1_id: int, user2_id: int):
-        common_movies = self.get_common_movies(user1_id, user2_id)
-        min_common_movies = 2
-        # check if the users have no movies in common
-        if len(common_movies) < min_common_movies:
-            # if they have no common movies, similarity defaults to zero
-            # print(f'{user1_id} and {user2_id} have no movie ratings in common')
-            return 0.0
-        user1_ratings = [self.get_user_movie_rating(
-            int(user1_id), movie_id) for movie_id in common_movies]
-        user2_ratings = [self.get_user_movie_rating(
-            int(user2_id), movie_id) for movie_id in common_movies]
-        error_in_common_movies = spatial.distance.euclidean(
-            user1_ratings, user2_ratings)
-        similarity_score = 1 / (1 + error_in_common_movies)
-        # print(
-        #     f'Found similarity of {similarity_score} based on {len(common_movies)} in common')
-        return similarity_score
-
-    def get_movie_recommendation(self, user1_id: int, user2_id: int) -> int:
-        common_movies = self.get_common_movies(user1_id, user2_id)
-        movies_no_user1_rating = self.get_user_movies(user2_id) - common_movies
-        movie_id_rating_pairs = [(movie_id, self.get_user_movie_rating(
-            user2_id, movie_id)) for movie_id in movies_no_user1_rating]
-        # sort by ratings
-        movie_id_rating_pairs.sort(key=lambda pair: pair[1], reverse=True)
-        return movie_id_rating_pairs
-
-    def get_most_similar_user(self, user_id: int):
-        print('called get_most_similar_user')
-        comparisons = 0
-        max_comparisons = 200
-        most_similar_user = None
-        most_similar_score = float(0)
-        for id in self.ratings_df['user_id'].unique():
-            # print(f'comparing similarity of {user_id} and {id}')
-            similarity = self.get_user_similarity_score(user_id, id)
-            # print('found similarity of ' + str(similarity))
-            if similarity != None and user_id != id:
-                if similarity > most_similar_score:
-                    if similarity == float(1) and len(self.get_common_movies(user_id, id)) < 4:
-                        comparisons += 1
-                        continue
-                    most_similar_user = id
-                    most_similar_score = similarity
-                    # print(
-                    #     f'updated most similar ({most_similar_user} with score of {most_similar_score})')
-            comparisons += 1
-            if comparisons >= max_comparisons:
-                return most_similar_user
-        return most_similar_user
-
-    def get_naive_recommendation(self, user_id: int):
-        user2_id = self.get_most_similar_user(user_id)
-        print(f'found similar user of {user2_id}')
-        recs = self.get_movie_recommendation(user_id, user2_id)
-        for rec in recs:
-            print(self.get_movie_title(rec[0]))
-        return recs
-
     # https://colab.research.google.com/github/rposhala/Recommender-System-on-MovieLens-dataset/blob/main/Item_based_Collaborative_Recommender_System_using_KNN.ipynb#scrollTo=ZAc5xnl2mZp3
-    def get_user_based_recommendation(self, user_id: int):
+    def get_user_based_recommendation(self, user_id: int, movie_id: int):
         print(f'get user recommendation started for {user_id}')
         sim_users, distances = self.get_similar_users(user_id)
         weightage_list = distances/np.sum(distances)
@@ -213,15 +159,20 @@ class MovieRecommender:
         new_rating_matrix = weightage_list*mov_rtngs_sim_users
         mean_rating_list = new_rating_matrix.sum(axis=0)
         # print(mean_rating_list)
-        n = min(len(mean_rating_list), 7)
+        n = min(len(mean_rating_list), 10)
         results = list(movie_list[np.argsort(mean_rating_list)[::-1][:n]])
         seen_movies = self.get_user_movies(user_id=user_id)
-        for m in results[1:]:
+        rec_movies = list()
+        for m in results[1:4]:
             if m in seen_movies:
-                print(f'ignoring movie already seen ({self.get_movie_title(m)})')
-                n += 1
+                # print(f'ignoring movie already seen ({self.get_movie_title(m)})')
                 continue
-            print(self.get_movie_title(m))
+            # if 'Children' in self.get_movie_genres(movie_id) and 'Children' not in self.get_movie_genres(m):
+            #     print(f'ignoring ({self.get_movie_title(m)}) for genre mismatch with ({self.get_movie_title(movie_id)})')
+            #     continue
+            rec_movies.append(m)
+            # print(self.get_movie_title(m))
+        return rec_movies
 
     def get_movie_rating_count_percentile(self, movie_id: int):
         movie_name = self.get_movie_title(movie_id)

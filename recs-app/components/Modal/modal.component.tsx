@@ -1,12 +1,14 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import styles from './modal.module.css';
 import Movie from '../MovieContainer/movie.type';
+import Image from 'next/image';
 
 type ModalProps = {
     visible: boolean;
     movie: Movie | null;
     userID: string
     comparingUserID: string;
+    movie_list: Movie[];
     onClose: () => void;
 };
 
@@ -17,20 +19,35 @@ function formatNumber(number: number): string {
 }
 
 
-const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, onClose }) => {
+const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, onClose, movie_list }) => {
     const modalClassName = visible ? styles.modalVisible : styles.modalHidden;
+    const [similar_movies, setSimilarMovies] = useState<Movie[]>([]);
+
+    let s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
+
+    // a specific emoji will be displayed based on the average rating
     const maxRating: number = 4.5;
     const minRating: number = 3;
     const emojis = ["💔", "🤎", "💛", "❤️", "❤️‍🔥"];
     let ratingEmoji = ''
     if (movie) {
         const emoji_idx = Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)
-        console.log('emoji_id');
+        ratingEmoji = emojis[emoji_idx]
+        console.log("movie emoji");
         console.log(emoji_idx);
-        ratingEmoji = emojis[Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)]
     }
-    console.log("movie emoji")
-    console.log(ratingEmoji);
+
+    function filterSimilarMovies(similar: number[]) {
+        return movie_list.filter(movie => similar.includes(parseInt(movie.movie_id)))
+    }
+
+    useEffect(() => {
+        if (movie && movie.similar_to) {
+            setSimilarMovies(filterSimilarMovies(movie.similar_to));
+        }
+
+    }, [movie])
+
 
     return (
         <div className={modalClassName} onClick={onClose}>
@@ -51,10 +68,31 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                             <strong>{movie.ranking}</strong>
                             <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1>
                             <em>An AI interpretation of {movie.name}</em>
-                            <p>
-                                {ratingEmoji + formatNumber(movie.avgRating)}
-                                {movie.substituted_desc && movie.substituted_desc}
-                            </p>
+                            <p>{ratingEmoji + formatNumber(movie.avgRating)}</p>
+                            <p>{movie.substituted_desc && movie.substituted_desc}</p>
+
+                            <h2>Users also enjoyed</h2>
+                            {similar_movies.map(similar_movie => {
+                                return (
+                                    <>
+                                        <p>{similar_movie.substituted_name}</p>
+                                        <Image
+                                            src={
+                                                s3BucketBaseURL +
+                                                similar_movie.movie_id +
+                                                ".jpg"
+                                            }
+                                            className={styles.movieImage}
+                                            width={255}
+                                            height={255}
+                                            alt={"Movie poster for " + movie.name}
+                                        />
+                                    </>
+
+
+                                )
+
+                            })}
                         </div>
                         <div className={styles.closeButton} onClick={onClose}><p>❌</p></div>
                     </>

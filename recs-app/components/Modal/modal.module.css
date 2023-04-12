@@ -35,6 +35,11 @@
   padding-bottom: 2rem;
 }
 
+.modalContentContainer p {
+  padding: 1rem;
+  text-align: left;
+}
+
 @media only screen and (max-width: 767px) {
   .modalContent {
     width: auto;

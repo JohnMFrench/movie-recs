@@ -2,5 +2,11 @@
     "python.analysis.extraPaths": [
         "./api",
         "c:\\users\\john.french\\appdata\\roaming\\python\\python310\\site-packages"
-    ]
+    ],
+    "azureFunctions.deploySubpath": ".",
+    "azureFunctions.scmDoBuildDuringDeployment": true,
+    "azureFunctions.pythonVenv": "api_env",
+    "azureFunctions.projectLanguage": "Python",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen"
 }

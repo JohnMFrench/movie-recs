@@ -34,3 +34,5 @@ tests/scripts/*.py
 *.jpg
 *.json
 
+
+.python_packages

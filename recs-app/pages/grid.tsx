@@ -8,7 +8,6 @@ import MovieContainer from "@/components/MovieContainer/movie_container.componen
 import RecContainer from "@/components/RecContainer/rec_container.component";
 import RecommendationDataService from "@/api/recommendation.api";
 import CookieNotification from "@/components/CookieNotification/cookie_notification.component";
-import { Cookie } from "next/font/google";
 
 
 type UserPrefs = {
@@ -153,6 +152,7 @@ const Grid = () => {
         }
     }
 
+
     //TODO take this out, only for testing
     useEffect(() => {
         console.log('CALLBACK FROM LIKED MOVIES');
@@ -161,7 +161,7 @@ const Grid = () => {
 
     // all async behavior needs to be declared in the useEffect block
     useEffect(() => {
-        const metadata_url: string = "/top_rated_1000.json";
+        const metadata_url: string = "/top_rated_similars_1000.json";
         // Fetch data from a JSON file containing top rated movies.
         const fetchMovies = async () => {
             const response = await fetch(metadata_url);
@@ -179,6 +179,7 @@ const Grid = () => {
                 ranking: movie.ranking,
                 avgRating: movie.avg_rating,
                 count: movie.num_ratings,
+                similar_to: movie.similar_movie_ids,
                 visible: true,
                 closing: false,
             }));
@@ -251,6 +252,7 @@ const Grid = () => {
                         setModalVisible(false);
                     }}
                     userID={nextUserID}
+                    movie_list={movies}
                     comparingUserID={mostSimilarUserID} />
                 <RecContainer type={"similar_user"} user1_id={nextUserID} user2_id={mostSimilarUserID} visible={toastRecButtonVisible} />
             </div>
