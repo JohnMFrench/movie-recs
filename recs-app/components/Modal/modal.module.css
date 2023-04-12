@@ -23,22 +23,18 @@
   max-width: 95%;
   max-height: 95%;
   overflow: auto;
-  text-align: center;
+  text-align: left;
   border-radius: 4px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   color: white;
   background-color: black;
   border: 0.25rem solid #6b2032;
-  border-radius: 1rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-bottom: 2rem;
 }
 
-.modalContentContainer p {
-  padding: 1rem;
-  text-align: left;
+.modalContentContainer * {
+  padding: 0.5rem;
 }
+
 
 @media only screen and (max-width: 767px) {
   .modalContent {
@@ -54,7 +50,8 @@
     flex-direction: column !important;
   }
   .modalContentContainer * {
-    padding: 0.5rem;
+    padding: 0.25rem;
+    text-align: left;
   }
   .modalContentContainer {
     padding: 0.2rem !important;
@@ -86,4 +83,26 @@
 .movieTitle {
   font-size: clamp(16px, 18px, 3rem);
   padding: 0.75rem;
+}
+
+.rankingHighlight {
+  text-align: center;
+  min-width: 0.5rem;
+  min-height: 0.5rem;
+  background-color: lightgray;
+  color: black;
+  border-radius: 1rem;
+}
+
+.similarMovieContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
 }

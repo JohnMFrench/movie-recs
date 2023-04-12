@@ -65,29 +65,33 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                     <>
                         <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                         <div className={styles.modalContentContainer}>
-                            <strong>{movie.ranking}</strong>
                             <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1>
                             <em>An AI interpretation of {movie.name}</em>
                             <p>{ratingEmoji + formatNumber(movie.avgRating)}</p>
                             <p>{movie.substituted_desc && movie.substituted_desc}</p>
 
-                            <h2>Users also enjoyed</h2>
+                            <strong>Users also enjoyed</strong>
                             {similar_movies.map(similar_movie => {
                                 return (
-                                    <>
-                                        <p>{similar_movie.substituted_name}</p>
-                                        <Image
-                                            src={
-                                                s3BucketBaseURL +
-                                                similar_movie.movie_id +
-                                                ".jpg"
-                                            }
-                                            className={styles.movieImage}
-                                            width={255}
-                                            height={255}
-                                            alt={"Movie poster for " + movie.name}
-                                        />
-                                    </>
+                                    <div className={styles.similarMovieContainer}>
+                                        <div className="left">
+                                            <b>{similar_movie.substituted_name}</b><br/>
+                                            <small>{similar_movie.substituted_desc}</small>
+                                        </div>
+                                        <div className="right">
+                                            <Image
+                                                src={
+                                                    s3BucketBaseURL +
+                                                    similar_movie.movie_id +
+                                                    ".jpg"
+                                                }
+                                                className={styles.movieImage}
+                                                width={255}
+                                                height={255}
+                                                alt={"Movie poster for " + movie.name}
+                                            />
+                                        </div>
+                                    </div>
 
 
                                 )
