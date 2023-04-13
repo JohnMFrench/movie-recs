@@ -73,7 +73,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                             <strong>Users also enjoyed</strong>
                             {similar_movies.map(similar_movie => {
                                 return (
-                                    <div className={styles.similarMovieContainer}>
+                                    <div className={styles.similarMovieContainer} key={similar_movie.movie_id}>
                                         <div className="left">
                                             <b>{similar_movie.substituted_name}</b><br/>
                                             <small>{similar_movie.substituted_desc}</small>
