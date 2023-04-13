@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
     const emojis = ["💔", "🤎", "💛", "❤️", "❤️‍🔥"];
     let ratingEmoji = ''
     if (movie) {
-        const emoji_idx = Math.round(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)
+        const emoji_idx = Math.floor(((movie.avgRating - minRating) / (maxRating - minRating)) * emojis.length)
         ratingEmoji = emojis[emoji_idx]
         console.log("movie emoji");
         console.log(emoji_idx);
