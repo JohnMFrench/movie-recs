@@ -69,6 +69,7 @@ function MovieContainer(props: MovieContainerProps) {
           className={styles.movieImage}
           fill={true}
           alt={"Movie poster for " + props.movie.name}
+          onError={(e) => (console.log(e))}
         />
         <div className={styles.overlay}>
           <h2 className={styles.movieContainerTitle}>{props.movie.substituted_name ? props.movie.substituted_name : props.movie.name}</h2>

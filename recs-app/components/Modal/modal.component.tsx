@@ -89,6 +89,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                                                 width={255}
                                                 height={255}
                                                 alt={"Movie poster for " + movie.name}
+                                                onError={(e) => (console.log(e))}
                                             />
                                         </div>
                                     </div>
