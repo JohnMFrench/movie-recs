@@ -55,32 +55,23 @@ class MovieRecommender:
             columns='movie_id',
             values='rating'
         ).fillna(0)
+
+        # initialize user_data to empty string
         self.user_data = ''
 
-    # copied from github
-    def get_similar_users(self, user: int, n=3):
-        # print('get similar users called on user ',
-        #       user, ' with type ', type(user))
-        # input to this function is the user and number of top similar users you want.
-        # print(
-        #     f'get_similar_users called with self.mrm_df shape of {self.mrm_df.shape}')
-        # print(f'values for {user}')
+
+    # adapted from github
+    def get_similar_users(self, user: int, n=5):
         knn_input = self.user_data
              
-        # print(f'knn_input with shape of {knn_input.shape}')
         if len(knn_input.shape) > 2:
             # print(f'knn_input has too many dimensions {knn_input.shape}')
             knn_input = knn_input[:, :, 0]
-            # knn_input = knn_input.squeeze(axis=1)
-        # print(
-        #     f'get_similar_users called with knn_input shape of {knn_input.shape}')
+
+        # find distances and indicespusing kneighbors method
         distances, indices = self.knn_model.kneighbors(
             knn_input, n_neighbors=n+1)
 
-        # print(f"Top {n} users who are very much similar to the User- {user}are: ")
-        # for i in range(1, len(distances[0])):
-            # print(i, ". User:", indices[0][i]+1,
-                #   "separated by distance of", distances[0][i])
         return indices.flatten()[1:], distances.flatten()[1:]
 
     def refit_model(self):
@@ -111,7 +102,7 @@ class MovieRecommender:
 
     # returns an array of the movie_id for all movies user has rated
     def get_user_movies(self, user_id: int):
-        return set([int(x) for x in self.ratings_df[self.ratings_df['user_id'] == user_id].index])
+        return list([int(x) for x in self.ratings_df[self.ratings_df['user_id'] == user_id].index])
 
     def get_movie_users(self, movie_id: int):
         return set([int(x) for x in self.ratings_df[self.ratings_df.index == movie_id]['user_id'].values])
@@ -137,9 +128,6 @@ class MovieRecommender:
         pattern = compile(r'\s*\(\d{4}\)\s*')
         return pattern.sub('', raw_string)
 
-    def get_movie_genres(self, movie_id: int):
-        return str(self.movies_df[self.movies_df.index == movie_id]['genres'].values[0])
-
     def get_next_avail_user_id(self):
         return self.ratings_df['user_id'].max() + 1
 
@@ -147,10 +135,13 @@ class MovieRecommender:
         return int(self.ratings_df.loc[(self.ratings_df['user_id'] == user_id) & (self.ratings_df.index == movie_id), 'rating'])
 
     # https://colab.research.google.com/github/rposhala/Recommender-System-on-MovieLens-dataset/blob/main/Item_based_Collaborative_Recommender_System_using_KNN.ipynb#scrollTo=ZAc5xnl2mZp3
-    def get_user_based_recommendation(self, user_id: int, movie_id: int):
-        print(f'get user recommendation started for {user_id}')
-        sim_users, distances = self.get_similar_users(user_id)
+    def get_user_based_recommendation(self, user_id: int, movie_id: int, n: int):
+        # find similar users using knn model
+        sim_users, distances = self.get_similar_users(user_id, n=n)
+
+        # normalizing data
         weightage_list = distances/np.sum(distances)
+
         # print(weightage_list)
         mov_rtngs_sim_users = self.mrm_df.values[sim_users]
         movie_list = self.mrm_df.columns
@@ -162,14 +153,15 @@ class MovieRecommender:
         n = min(len(mean_rating_list), 10)
         results = list(movie_list[np.argsort(mean_rating_list)[::-1][:n]])
         seen_movies = self.get_user_movies(user_id=user_id)
+        seen_movies.append(movie_id)
         rec_movies = list()
-        for m in results[1:4]:
+        for m in results[:5]:
             if m in seen_movies:
                 # print(f'ignoring movie already seen ({self.get_movie_title(m)})')
                 continue
-            # if 'Children' in self.get_movie_genres(movie_id) and 'Children' not in self.get_movie_genres(m):
-            #     print(f'ignoring ({self.get_movie_title(m)}) for genre mismatch with ({self.get_movie_title(movie_id)})')
-            #     continue
+            if 'Children' in self.get_movie_genres(movie_id) and 'Children' not in self.get_movie_genres(m):
+                print(f'ignoring ({self.get_movie_title(m)}) for genre mismatch with ({self.get_movie_title(movie_id)})')
+                continue
             rec_movies.append(m)
             # print(self.get_movie_title(m))
         return rec_movies

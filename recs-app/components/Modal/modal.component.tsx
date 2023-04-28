@@ -22,6 +22,7 @@ function formatNumber(number: number): string {
 const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, onClose, movie_list }) => {
     const modalClassName = visible ? styles.modalVisible : styles.modalHidden;
     const [similar_movies, setSimilarMovies] = useState<Movie[]>([]);
+    console.log(movie?.similar_movie_ids);
 
     let s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
 
@@ -42,12 +43,11 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
     }
 
     useEffect(() => {
-        if (movie && movie.similar_to) {
-            setSimilarMovies(filterSimilarMovies(movie.similar_to));
+        if (movie && movie.similar_movie_ids) {
+            setSimilarMovies(filterSimilarMovies(movie.similar_movie_ids));
+            // setSimilarMovies(movie.similar_movie_ids);
         }
-
-    }, [movie])
-
+    }, [movie?.similar_movie_ids])
 
     return (
         <div className={modalClassName} onClick={onClose}>
@@ -65,38 +65,36 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                     <>
                         <img src={'https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/' + movie.movie_id + ".jpg"} alt="" />
                         <div className={styles.modalContentContainer}>
-                            <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1>
-                            <em>An AI interpretation of {movie.name}</em>
+                            {/* <h1 className={styles.movieTitle}>{movie.substituted_name ? movie.substituted_name : movie.name}</h1> */}
+                            <h1 className={styles.movieTitle}>{movie.name}</h1>
+                            {/* <em>An AI interpretation of {movie.name}</em> */}
                             <p>{ratingEmoji + formatNumber(movie.avgRating)}</p>
-                            <p>{movie.substituted_desc && movie.substituted_desc}</p>
+                            {/* <p>{movie.substituted_desc && movie.substituted_desc}</p> */}
 
                             <strong>Users also enjoyed</strong>
-                            {similar_movies.map(similar_movie => {
+                            {similar_movies.map((similar_movie, i) => {
                                 return (
                                     <div className={styles.similarMovieContainer} key={similar_movie.movie_id}>
                                         <div className="left">
-                                            <b>{similar_movie.substituted_name}</b><br/>
-                                            <small>{similar_movie.substituted_desc}</small>
+                                            <div>{similar_movie.name}</div>
+                                            <div style={{ display: "flex", flexDirection: "row" }}>
+                                                {movie.similar_movie_tags[i].map((shared_tag: any) => {
+                                                    return <span className={styles.sharedTag}>{shared_tag}</span>
+                                                })}
+                                            </div>
                                         </div>
                                         <div className="right">
                                             <Image
-                                                src={
-                                                    s3BucketBaseURL +
-                                                    similar_movie.movie_id +
-                                                    ".jpg"
-                                                }
+                                                src={s3BucketBaseURL + similar_movie.movie_id + ".jpg"}
                                                 className={styles.movieImage}
                                                 width={255}
                                                 height={255}
                                                 alt={"Movie poster for " + movie.name}
-                                                onError={(e) => (console.log(e))}
+                                                onError={(e) => console.log(e)}
                                             />
                                         </div>
                                     </div>
-
-
                                 )
-
                             })}
                         </div>
                         <div className={styles.closeButton} onClick={onClose}><p>❌</p></div>

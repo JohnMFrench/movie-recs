@@ -72,7 +72,8 @@ function MovieContainer(props: MovieContainerProps) {
           onError={(e) => (console.log(e))}
         />
         <div className={styles.overlay}>
-          <h2 className={styles.movieContainerTitle}>{props.movie.substituted_name ? props.movie.substituted_name : props.movie.name}</h2>
+          {/* <h2 className={styles.movieContainerTitle}>{props.movie.substituted_name ? props.movie.substituted_name : props.movie.name}</h2> */}
+          <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
           <h2 className={styles.movieContainerGenres}>
             <em>
               {genres && genres.replace(/\|/g, ' | ')}

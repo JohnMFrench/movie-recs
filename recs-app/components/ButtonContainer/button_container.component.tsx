@@ -13,13 +13,13 @@ const ButtonContainer = ({ movie, onThumbsDownClick, onThumbsUpClick, onNotSeenC
   return (
     <div className={styles.button_container}>
       <div className={styles.button} onClick={(event) => onThumbsDownClick(event, movie.movie_id)} title='Dislike'>
-        &#128078;
+        {/* &#128078; */}
       </div>
       <div className={styles.button} onClick={(event) => onNotSeenClick(event, movie.movie_id)} title='Not Seen'>
         👀
       </div>
       <div className={styles.button} onClick={(event) => onThumbsUpClick(event, movie.movie_id)} title='Like'>
-        &#128077;
+        {/* &#128077; */}
       </div>
     </div>
   );

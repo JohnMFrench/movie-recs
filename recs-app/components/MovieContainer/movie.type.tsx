@@ -9,6 +9,6 @@ export default interface Movie {
     count: number;
     visible: boolean;
     closing: boolean;
-    // not all movies will have similar movies...for now
-    similar_to: number[] | null;
+    similar_movie_ids: any;
+    similar_movie_tags: any;
 }

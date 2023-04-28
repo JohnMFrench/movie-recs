@@ -35,7 +35,6 @@
   padding: 0.5rem;
 }
 
-
 @media only screen and (max-width: 767px) {
   .modalContent {
     width: auto;
@@ -105,4 +104,12 @@
 
 .right {
   float: right;
+}
+
+.sharedTag {
+  background-color: #6b2032;
+  border-radius: 0.5rem;
+  margin-left: 0.5rem;
+  margin-top: 2rem;
+  overflow-x: visible;
 }

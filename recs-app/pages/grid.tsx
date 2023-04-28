@@ -179,7 +179,8 @@ const Grid = () => {
                 ranking: movie.ranking,
                 avgRating: movie.avg_rating,
                 count: movie.num_ratings,
-                similar_to: movie.similar_movie_ids,
+                similar_movie_ids: movie.similar_movie_ids,
+                similar_movie_tags: movie.similar_movie_tags,
                 visible: true,
                 closing: false,
             }));
