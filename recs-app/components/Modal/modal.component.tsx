@@ -38,8 +38,10 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
         console.log(emoji_idx);
     }
 
-    function filterSimilarMovies(similar: number[]) {
-        return movie_list.filter(movie => similar.includes(parseInt(movie.movie_id)))
+    function filterSimilarMovies(similar: number[]): Movie[] {
+        const movieMap = new Map(movie_list.map((movie) => [parseInt(movie.movie_id), movie]));
+        let similars = similar.map((id) => movieMap.get(id)).filter((movie) => movie !== undefined);
+        return similars as Movie[]; // Cast the resulting array to Movie[]
     }
 
     useEffect(() => {
