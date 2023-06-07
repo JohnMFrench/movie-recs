@@ -3,9 +3,6 @@ import styles from "./movie_container.module.css";
 import Movie from "./movie.type";
 import ButtonContainer from "../ButtonContainer/button_container.component";
 import Image from "next/image";
-import useAnalyticsEventTracker from '../Analytics/use_analytics_event_tracker';
-
-const gaEventTracker = useAnalyticsEventTracker('Test Label');
 
 interface MovieContainerProps {
   movie: Movie;
@@ -88,7 +85,6 @@ function MovieContainer(props: MovieContainerProps) {
             movie={props.movie}
             onNotSeenClick={(e: React.MouseEvent<HTMLDivElement>) => {
               props.onNotSeenClick(e, props.movie.movie_id)
-              gaEventTracker('Not Seen')
             }
             }
             onThumbsDownClick={(e: React.MouseEvent<HTMLDivElement>) =>
