@@ -3,10 +3,6 @@ import type { AppProps } from 'next/app'
 import { Roboto } from 'next/font/google'
 import { Inter } from 'next/font/google'
 
-import ReactGA from 'react-ga';
-  const TRACKING_ID = "G-4418WHS1MY"; // OUR_TRACKING_ID
-  ReactGA.initialize(TRACKING_ID);
-
 const inter = Inter({ subsets: ['latin'] })
 
 const roboto = Roboto({

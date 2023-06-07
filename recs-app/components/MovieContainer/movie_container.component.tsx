@@ -5,7 +5,7 @@ import ButtonContainer from "../ButtonContainer/button_container.component";
 import Image from "next/image";
 import useAnalyticsEventTracker from '../Analytics/use_analytics_event_tracker';
 
-const gaEventTracker = useAnalyticsEventTracker('Not Seen Click');
+const gaEventTracker = useAnalyticsEventTracker('Test Label');
 
 interface MovieContainerProps {
   movie: Movie;
