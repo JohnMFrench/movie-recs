@@ -19,7 +19,6 @@ const Toast: React.FC<ToastProps> = ({ message, recButtonVisible, onRequestRecom
 
   return (
     <div className={`${styles.toast} ${isVisible ? styles.visible : ''}`}>
-      {/* <span> */}
       <div className={styles.message}>
         🍿{message}
       </div>
@@ -28,7 +27,6 @@ const Toast: React.FC<ToastProps> = ({ message, recButtonVisible, onRequestRecom
           (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => onRequestRecommendation(e)
         }>👥User-Based Recommendation</div>
       }
-      {/* </span> */}
     </div>
   );
 };
