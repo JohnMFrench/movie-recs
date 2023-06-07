@@ -2,6 +2,9 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Roboto } from 'next/font/google'
 import { Inter } from 'next/font/google'
+import Script from "next/script";
+
+const GA_MEASUREMENT_ID = 'G-HFPDF35Z1M';
 
 const inter = Inter({ subsets: ['latin'] })
 
