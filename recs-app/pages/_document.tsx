@@ -3,19 +3,21 @@ import * as gtag from '../components/Analytics/gtag'
 import Script from 'next/script'
 
 export default function Document() {
+  gtag.pageview('home'); // Call the function here before the return statement
+  
   return (
     <Html lang="en">
       <script
         dangerouslySetInnerHTML={{
           __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-              gtag('config', '${gtag.GA_TRACKING_ID}', {
-                page_path: window.location.pathname,
-              });
-            `,
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
         }}
       />
       <Head />
@@ -29,5 +31,5 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  )
+  );
 }
