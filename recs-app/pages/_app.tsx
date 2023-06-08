@@ -4,8 +4,6 @@ import { Roboto } from 'next/font/google'
 import { Inter } from 'next/font/google'
 import Script from "next/script";
 
-const GA_MEASUREMENT_ID = 'G-HFPDF35Z1M';
-
 const inter = Inter({ subsets: ['latin'] })
 
 const roboto = Roboto({
