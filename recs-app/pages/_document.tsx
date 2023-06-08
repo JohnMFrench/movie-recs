@@ -1,20 +1,29 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import * as gtag from '../components/Analytics/gtag'
 import Script from 'next/script'
 
 export default function Document() {
   return (
     <Html lang="en">
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=G-HFPDF35Z1M`}
-        strategy="afterInteractive"
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', '${gtag.GA_TRACKING_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+        }}
       />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-HFPDF35Z1M');`}
-      </Script>
       <Head />
+      {/* Global Site Tag (gtag.js) - Google Analytics */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      />
       <body>
         <Main />
         <NextScript />
