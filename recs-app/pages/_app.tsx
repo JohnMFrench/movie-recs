@@ -1,8 +1,8 @@
 import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
 import { Roboto } from 'next/font/google'
 import { Inter } from 'next/font/google'
-import Script from "next/script";
+import type { AppProps } from 'next/app';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}</style>
       <Component className={roboto.className} {...pageProps} />
+      <Analytics />
     </>
   )
 }
