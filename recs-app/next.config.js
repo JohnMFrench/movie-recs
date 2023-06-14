@@ -4,7 +4,7 @@ const nextConfig = {
   crossOrigin: "anonymous",
   images: {
     domains: [
-      "johnmfrench-movie-recs-public-posters.s3.amazonaws.com",
+      "popcorn-posters.s3.us-east-2.amazonaws.com",
     ],
   },
 };

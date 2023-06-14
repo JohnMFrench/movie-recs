@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
     const [similar_movies, setSimilarMovies] = useState<Movie[]>([]);
     console.log(movie?.similar_movie_ids);
 
-    let s3BucketBaseURL = "https://johnmfrench-movie-recs-public-posters.s3.amazonaws.com/public/";
+    let s3BucketBaseURL = "https://popcorn-posters.s3.us-east-2.amazonaws.com/public/";
 
     // a specific emoji will be displayed based on the average rating
     const maxRating: number = 4.5;
