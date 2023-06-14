@@ -30,7 +30,7 @@ function formatNumber(number: number): string {
 }
 
 function MovieContainer(props: MovieContainerProps) {
-  let s3BucketBaseURL = "https://popcorn-posters.s3.us-east-2.amazonaws.com/public/";
+  let s3BucketBaseURL = "https://popcorn-posters.s3.us-east-2.amazonaws.com/";
   const [genres, setGenres] = useState<string>();
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -47,7 +47,7 @@ function MovieContainer(props: MovieContainerProps) {
       onAnimationEnd={() => props.toggleMovieVisibility(props.movie.movie_id)}
     >
       <div className={styles.imageContainer}>
-        {/* <img
+        <img
           src={
             s3BucketBaseURL +
             props.movie.movie_id +
@@ -55,9 +55,10 @@ function MovieContainer(props: MovieContainerProps) {
           }
           className={styles.movieImage}
           alt={"Movie poster for " + props.movie.name}
-        /> */}
+        />
+
         {/* took this out to load images without cdn */}
-        <Image
+        {/* <Image
           src={
             s3BucketBaseURL +
             props.movie.movie_id +
@@ -67,7 +68,7 @@ function MovieContainer(props: MovieContainerProps) {
           fill={true}
           alt={"Movie poster for " + props.movie.name}
           onError={(e) => (console.log(e))}
-        />
+        /> */}
         <div className={styles.overlay}>
           {/* <h2 className={styles.movieContainerTitle}>{props.movie.substituted_name ? props.movie.substituted_name : props.movie.name}</h2> */}
           <h2 className={styles.movieContainerTitle}>{props.movie.name}</h2>
