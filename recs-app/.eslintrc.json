@@ -1,8 +1,3 @@
 {
-  "extends": "next",
-  "rules": {
-    "react/no-unescaped-entities": "off",
-    "@next/next/no-page-custom-font": "off",
-    "ignoreDuringBuilds": 0
-  }
+  "extends": "next"
 }

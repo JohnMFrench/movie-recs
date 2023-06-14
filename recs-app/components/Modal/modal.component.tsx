@@ -80,8 +80,8 @@ const Modal: React.FC<ModalProps> = ({ visible, movie, userID, comparingUserID, 
                                         <div className="left">
                                             <div>{similar_movie.name}</div>
                                             <div style={{ display: "flex", flexDirection: "row" }}>
-                                                {movie.similar_movie_tags[i].map((shared_tag: any) => {
-                                                    return <span className={styles.sharedTag}>{shared_tag}</span>
+                                                {movie.similar_movie_tags[i].map((shared_tag: any, i: number) => {
+                                                    return <span className={styles.sharedTag} key={i}>{shared_tag}</span>
                                                 })}
                                             </div>
                                         </div>
