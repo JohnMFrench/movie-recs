@@ -21,7 +21,8 @@ const startingPrefs: UserPrefs = {
     disliked_movies: null,
 };
 
-const Grid = () => {
+
+const Grid = ({ sessionId }: { sessionId: string }) => {
     const defaultMoviesShown: number = 20;
     const [movies, setMovies] = useState<Movie[]>([]);
     const [userPrefs, setUserPrefs] = useState(startingPrefs);
@@ -201,6 +202,7 @@ const Grid = () => {
         };
         window.addEventListener("scroll", (e) => onWindowScroll(e));
 
+
         // Call the `fetchMovies` function when the component mounts.
         fetchMovies();
 
@@ -222,7 +224,7 @@ const Grid = () => {
 
     return (
         <>
-            <Navbar title={"MovieLens Recommendations"} liked_movies={userPrefs.liked_movies}/>
+            <Navbar title={"MovieLens Recommendations"} liked_movies={userPrefs.liked_movies} />
             {/* <HelpBar /> */}
             <div className={"app-container"}>
                 {movies.slice(0, moviesShown).map((movie: Movie, i: number) => (
@@ -237,6 +239,7 @@ const Grid = () => {
                                     onNotSeenClick(e, movie)
                                 }
                                 toggleMovieVisibility={toggleMovieVisibility}
+                                sessionId={sessionId}
                             />
                         )}
                         {/* <Toast

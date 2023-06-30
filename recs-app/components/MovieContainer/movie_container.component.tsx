@@ -19,6 +19,7 @@ interface MovieContainerProps {
     movie_id: string
   ): void;
   toggleMovieVisibility(movie_id: string): void;
+  sessionId: string;
 }
 
 // return a number formatted to tenths place and expressed in thousands with "k"
@@ -91,6 +92,7 @@ function MovieContainer(props: MovieContainerProps) {
             onThumbsUpClick={(e: React.MouseEvent<HTMLDivElement>) =>
               props.onThumbsUpClick(e, props.movie.movie_id)
             }
+            sessionId={props.sessionId}
           />
         </div>
       </div>

@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import CookieNotification from "../CookieNotification/cookie_notification.component";
 import styles from "./navbar.module.css";
 import Movie from "../MovieContainer/movie.type";
+import ClickDataService from "@/api/clicks.api";
 
 interface NavbarProps {
     title: string;
@@ -10,6 +11,13 @@ interface NavbarProps {
 
 const Navbar: FC<NavbarProps> = ({ title, liked_movies }) => {
     const num_reviews_required: number = 3;
+
+    useEffect(() => {
+        // DELETE ME 
+        // console.log('NAVBAR TESTING EFFECT');
+        // const cds: ClickDataService = new ClickDataService();
+        // cds.postClick('1234', 123);
+  }, []);
     return (
         <nav className={styles.navbar}>
             <h2>
