@@ -13,6 +13,7 @@ interface Props {
 }
 
 const ButtonContainer = ({ movie, sessionId, onThumbsDownClick, onThumbsUpClick, onNotSeenClick }: Props) => {
+
   const cds: ClickDataService = new ClickDataService();
 
   return (
@@ -22,9 +23,10 @@ const ButtonContainer = ({ movie, sessionId, onThumbsDownClick, onThumbsUpClick,
       </div>
       <div className={styles.button} onClick={(event) => {
         onNotSeenClick(event, movie.movie_id);
+
+        // POST the click to flask api
         cds.postClick(sessionId, parseInt(movie.movie_id));
         console.log('sending CLICK to api');
-        // cds.postClick('0629', parseInt(movie.movie_id));
       }} title='Not Seen'>
         👀
       </div>

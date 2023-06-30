@@ -3,8 +3,8 @@ import http from "./rest_client";
 
 class ClickDataService {
     postClick(sessionId: string, movieId: number) {
-
-        return http.post('/click', JSON.stringify({ sessionId, movieId }));
+        console.log('api/clicks.api.ts method called');
+        return http.post('/', JSON.stringify({ sessionId, movieId }));
     }
 }
 
