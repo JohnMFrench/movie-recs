@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import http from './rest_client';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
+export default async function clickApiHandler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method === 'POST') {
     const { sessionId, movieId } = req.body;
 
     if (sessionId && movieId) {

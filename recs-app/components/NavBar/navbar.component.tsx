@@ -2,7 +2,6 @@ import { FC, useEffect } from "react";
 import CookieNotification from "../CookieNotification/cookie_notification.component";
 import styles from "./navbar.module.css";
 import Movie from "../MovieContainer/movie.type";
-import ClickDataService from "@/api/clicks.api";
 
 interface NavbarProps {
     title: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from "./button_container.module.css";
 import Movie from '../MovieContainer/movie.type';
-import ClickDataService from '@/api/clicks.api';
+import clickApiHandler from "@/pages/api/click";
 import { NextApiRequest, NextApiResponse } from 'next';
 
 interface Props {
@@ -12,9 +12,30 @@ interface Props {
   onNotSeenClick: (event: React.MouseEvent<HTMLDivElement>, movie_id: string) => void;
 }
 
-const ButtonContainer = ({ movie, sessionId, onThumbsDownClick, onThumbsUpClick, onNotSeenClick }: Props) => {
+const makeClickApiCall = async (sessionId: string, movieId: string) => {
+  try {
+    const response = await fetch('/api/click', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionId, movieId }),
+    });
 
-  const cds: ClickDataService = new ClickDataService();
+    if (!response.ok) {
+      throw new Error('Failed to make the API call');
+    }
+
+    // Handle the successful response
+    const data = await response.json();
+    console.log(data); // Do something with the response data
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+  }
+};
+
+const ButtonContainer = ({ movie, sessionId, onThumbsDownClick, onThumbsUpClick, onNotSeenClick }: Props) => {
 
   return (
     <div className={styles.button_container}>
@@ -25,7 +46,7 @@ const ButtonContainer = ({ movie, sessionId, onThumbsDownClick, onThumbsUpClick,
         onNotSeenClick(event, movie.movie_id);
 
         // POST the click to flask api
-        cds.postClick(sessionId, parseInt(movie.movie_id));
+        makeClickApiCall(sessionId, movie.movie_id);
         console.log('sending CLICK to api');
       }} title='Not Seen'>
         👀
