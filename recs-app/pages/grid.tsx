@@ -6,7 +6,6 @@ import Modal from "@/components/Modal/modal.component";
 import Movie from "@/components/MovieContainer/movie.type";
 import MovieContainer from "@/components/MovieContainer/movie_container.component";
 import RecContainer from "@/components/RecContainer/rec_container.component";
-import RecommendationDataService from "@/api/recommendation.api";
 import CookieNotification from "@/components/CookieNotification/cookie_notification.component";
 
 
@@ -206,19 +205,19 @@ const Grid = ({ sessionId }: { sessionId: string }) => {
         // Call the `fetchMovies` function when the component mounts.
         fetchMovies();
 
-        const ds = new RecommendationDataService();
+        // const ds = new RecommendationDataService();
         // Call the `fextNextUserID` function when the component mounts.
         if (userPrefs.liked_movies && !mostSimilarUserID && !isRecRequested) {
             setIsRecRequested(true);
-            ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
-                .then((data: any) => {
-                    console.log('FOUND SIMILAR USER');
-                    console.log(data.user);
-                    setMostSimilarUseID(data.user);
-                })
-                .catch((e: any) => {
-                    console.log('caught error:' + e);
-                })
+            // ds.getMostSimilarUser(nextUserID, userPrefs.liked_movies)
+            //     .then((data: any) => {
+            //         console.log('FOUND SIMILAR USER');
+            //         console.log(data.user);
+            //         setMostSimilarUseID(data.user);
+            //     })
+            //     .catch((e: any) => {
+            //         console.log('caught error:' + e);
+            //     })
         }
     }, [toastRecButtonVisible]);
 
